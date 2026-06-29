@@ -27,7 +27,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { clients, products } from '@/lib/mock-data'
 import type { Client } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -39,6 +38,8 @@ const statusMap = {
 }
 
 export default function ClientesPage() {
+  const clients: Client[] = []
+  const products: Array<{ id: string; name: string }> = []
   const [search, setSearch] = useState('')
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
@@ -72,7 +73,6 @@ export default function ClientesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Clientes</h1>
         <p className="mt-1 text-muted-foreground">
@@ -80,7 +80,6 @@ export default function ClientesPage() {
         </p>
       </div>
 
-      {/* Filters */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -160,7 +159,6 @@ export default function ClientesPage() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="rounded-xl border border-border bg-card">
         <Table>
           <TableHeader>
@@ -213,7 +211,6 @@ export default function ClientesPage() {
         </Table>
       </div>
 
-      {/* Client Detail Dialog */}
       <Dialog open={!!selectedClient} onOpenChange={() => setSelectedClient(null)}>
         <DialogContent>
           <DialogHeader>

@@ -1,19 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { 
-  Building2, 
-  Palette, 
-  Link as LinkIcon, 
-  Bell, 
-  Shield, 
-  Users, 
+import {
+  Building2,
+  Palette,
+  Link as LinkIcon,
+  Bell,
+  Shield,
+  Users,
   FileText,
-  CreditCard,
-  Sparkles,
-  Database,
   Save,
-  ExternalLink
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,20 +17,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 
-const integrations = [
-  { name: 'Stripe', status: 'connected', icon: CreditCard, description: 'Pagamentos e assinaturas' },
-  { name: 'OpenAI', status: 'connected', icon: Sparkles, description: 'Modelos de IA' },
-  { name: 'Supabase', status: 'connected', icon: Database, description: 'Banco de dados' },
-  { name: 'Vercel', status: 'connected', icon: ExternalLink, description: 'Hospedagem' },
-]
-
 export default function ConfiguracoesPage() {
-  const [companyName, setCompanyName] = useState('Grupo MF')
-  const [companyEmail, setCompanyEmail] = useState('contato@grupomf.com')
+  const [companyName, setCompanyName] = useState('')
+  const [companyEmail, setCompanyEmail] = useState('')
+  const integrations: Array<{ name: string; description: string }> = []
+  const logs: Array<{ action: string; user: string; time: string }> = []
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Configurações</h1>
         <p className="mt-1 text-muted-foreground">
@@ -42,7 +32,6 @@ export default function ConfiguracoesPage() {
         </p>
       </div>
 
-      {/* Tabs */}
       <Tabs defaultValue="grupo" className="space-y-6">
         <TabsList className="flex-wrap">
           <TabsTrigger value="grupo" className="gap-2">
@@ -75,7 +64,6 @@ export default function ConfiguracoesPage() {
           </TabsTrigger>
         </TabsList>
 
-        {/* Grupo MF */}
         <TabsContent value="grupo" className="space-y-6">
           <div className="rounded-xl border border-border bg-card p-5">
             <h3 className="font-semibold">Informações do Grupo</h3>
@@ -86,6 +74,7 @@ export default function ConfiguracoesPage() {
                 <Input
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
+                  placeholder="Sem dados conectados"
                 />
               </div>
               <div className="space-y-2">
@@ -94,6 +83,7 @@ export default function ConfiguracoesPage() {
                   type="email"
                   value={companyEmail}
                   onChange={(e) => setCompanyEmail(e.target.value)}
+                  placeholder="Sem dados conectados"
                 />
               </div>
             </div>
@@ -109,17 +99,16 @@ export default function ConfiguracoesPage() {
             <h3 className="font-semibold">Estrutura do Grupo</h3>
             <p className="text-sm text-muted-foreground">Produtos do ecossistema</p>
             <div className="mt-4 space-y-3">
-              {['MF Labs', 'COS', 'TravelPro', 'TravelMatch', 'VUEI', 'EME'].map((product, i) => (
+              {['MF Labs', 'COS', 'TravelPro', 'TravelMatch', 'VUEI', 'EME'].map((product, index) => (
                 <div key={product} className="flex items-center justify-between rounded-lg bg-secondary/50 px-4 py-3">
                   <span className="font-medium">{product}</span>
-                  <Badge variant="secondary">{i === 0 ? 'Labs' : 'Produto'}</Badge>
+                  <Badge variant="secondary">{index === 0 ? 'Labs' : 'Produto'}</Badge>
                 </div>
               ))}
             </div>
           </div>
         </TabsContent>
 
-        {/* Marca */}
         <TabsContent value="marca" className="space-y-6">
           <div className="rounded-xl border border-border bg-card p-5">
             <h3 className="font-semibold">Identidade Visual</h3>
@@ -155,87 +144,34 @@ export default function ConfiguracoesPage() {
           </div>
         </TabsContent>
 
-        {/* Integrações */}
         <TabsContent value="integracoes" className="space-y-6">
-          <div className="rounded-xl border border-border bg-card">
-            <div className="border-b border-border px-5 py-4">
-              <h3 className="font-semibold">Integrações Ativas</h3>
-              <p className="text-sm text-muted-foreground">Serviços conectados ao MF Control Center</p>
-            </div>
-            <div className="divide-y divide-border">
-              {integrations.map((integration) => (
-                <div key={integration.name} className="flex items-center justify-between px-5 py-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex size-10 items-center justify-center rounded-lg bg-secondary">
-                      <integration.icon className="size-5" />
-                    </div>
-                    <div>
-                      <p className="font-medium">{integration.name}</p>
-                      <p className="text-sm text-muted-foreground">{integration.description}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge variant="secondary" className="bg-success/20 text-success">
-                      Conectado
-                    </Badge>
-                    <Button variant="outline" size="sm">Configurar</Button>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <p className="font-medium">Nenhuma integração disponível</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              As integrações aparecerão aqui quando houver dados reais conectados.
+            </p>
+            {integrations.length > 0 && null}
           </div>
         </TabsContent>
 
-        {/* Notificações */}
         <TabsContent value="notificacoes" className="space-y-6">
-          <div className="rounded-xl border border-border bg-card p-5">
-            <h3 className="font-semibold">Preferências de Notificação</h3>
-            <p className="text-sm text-muted-foreground">Configure quais alertas deseja receber</p>
-            <div className="mt-6 space-y-4">
-              {[
-                { label: 'Novas assinaturas', description: 'Receber alerta quando houver nova assinatura' },
-                { label: 'Cancelamentos', description: 'Receber alerta quando houver cancelamento' },
-                { label: 'Falhas de pagamento', description: 'Receber alerta quando houver falha no pagamento' },
-                { label: 'Consumo elevado de IA', description: 'Receber alerta quando consumo atingir 90%' },
-                { label: 'Erros de sistema', description: 'Receber alerta quando houver erro crítico' },
-              ].map((item, i) => (
-                <div key={item.label} className="flex items-center justify-between rounded-lg bg-secondary/50 px-4 py-3">
-                  <div>
-                    <p className="font-medium">{item.label}</p>
-                    <p className="text-sm text-muted-foreground">{item.description}</p>
-                  </div>
-                  <input type="checkbox" defaultChecked className="size-5 accent-primary" />
-                </div>
-              ))}
-            </div>
+          <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <p className="font-medium">Nenhuma preferência carregada</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              As configurações de notificação serão exibidas quando estiverem conectadas.
+            </p>
           </div>
         </TabsContent>
 
-        {/* Segurança */}
         <TabsContent value="seguranca" className="space-y-6">
-          <div className="rounded-xl border border-border bg-card p-5">
-            <h3 className="font-semibold">Autenticação</h3>
-            <p className="text-sm text-muted-foreground">Configurações de segurança da conta</p>
-            <div className="mt-6 space-y-4">
-              <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-4 py-3">
-                <div>
-                  <p className="font-medium">Autenticação em duas etapas</p>
-                  <p className="text-sm text-muted-foreground">Adicione uma camada extra de segurança</p>
-                </div>
-                <Badge variant="secondary" className="bg-success/20 text-success">Ativo</Badge>
-              </div>
-              <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-4 py-3">
-                <div>
-                  <p className="font-medium">Sessões ativas</p>
-                  <p className="text-sm text-muted-foreground">2 dispositivos conectados</p>
-                </div>
-                <Button variant="outline" size="sm">Gerenciar</Button>
-              </div>
-            </div>
+          <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <p className="font-medium">Nenhuma configuração de segurança disponível</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Os detalhes de autenticação e sessão aparecerão aqui quando houver dados reais.
+            </p>
           </div>
         </TabsContent>
 
-        {/* Usuários */}
         <TabsContent value="usuarios" className="space-y-6">
           <div className="rounded-xl border border-border bg-card p-5">
             <h3 className="font-semibold">Gestão de Usuários</h3>
@@ -248,30 +184,13 @@ export default function ConfiguracoesPage() {
           </div>
         </TabsContent>
 
-        {/* Logs */}
         <TabsContent value="logs" className="space-y-6">
-          <div className="rounded-xl border border-border bg-card">
-            <div className="border-b border-border px-5 py-4">
-              <h3 className="font-semibold">Logs do Sistema</h3>
-              <p className="text-sm text-muted-foreground">Histórico de atividades recentes</p>
-            </div>
-            <div className="divide-y divide-border">
-              {[
-                { action: 'Login realizado', user: 'Marcus Ferreira', time: '5 min atrás' },
-                { action: 'Configuração alterada', user: 'Julia Santos', time: '1h atrás' },
-                { action: 'Novo usuário adicionado', user: 'Marcus Ferreira', time: '3h atrás' },
-                { action: 'Integração atualizada', user: 'Pedro Lima', time: '1 dia atrás' },
-                { action: 'Backup realizado', user: 'Sistema', time: '1 dia atrás' },
-              ].map((log, i) => (
-                <div key={i} className="flex items-center justify-between px-5 py-3">
-                  <div>
-                    <p className="text-sm font-medium">{log.action}</p>
-                    <p className="text-xs text-muted-foreground">{log.user}</p>
-                  </div>
-                  <span className="text-xs text-muted-foreground">{log.time}</span>
-                </div>
-              ))}
-            </div>
+          <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <p className="font-medium">Nenhum log disponível</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              O histórico do sistema aparecerá aqui quando houver dados reais.
+            </p>
+            {logs.length > 0 && null}
           </div>
         </TabsContent>
       </Tabs>

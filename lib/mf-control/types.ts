@@ -33,7 +33,7 @@ export interface DashboardOverviewChartPoint {
 }
 
 export interface DashboardOverviewData {
-  source: 'database' | 'mock'
+  source: 'database' | 'empty'
   generatedAt: string
   summary: {
     totalRevenue: DashboardOverviewMetric

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { alerts } from '@/lib/mock-data'
 import { cn } from '@/lib/utils'
 import {
   CreditCard,
@@ -24,8 +23,18 @@ const alertConfig = {
   integration: { icon: LinkIcon, color: 'text-muted-foreground', bg: 'bg-muted', label: 'Integração' },
 }
 
+type AlertItem = {
+  id: string
+  type: keyof typeof alertConfig
+  title: string
+  description: string
+  product?: string
+  timestamp: string
+  read: boolean
+}
+
 export default function AlertasPage() {
-  const [alertList, setAlertList] = useState(alerts)
+  const [alertList, setAlertList] = useState<AlertItem[]>([])
   const [filter, setFilter] = useState<string | null>(null)
 
   const filteredAlerts = filter
@@ -62,7 +71,6 @@ export default function AlertasPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Alertas</h1>
@@ -78,7 +86,6 @@ export default function AlertasPage() {
         )}
       </div>
 
-      {/* Filter */}
       <div className="flex flex-wrap gap-2">
         <Button
           variant={filter === null ? 'default' : 'outline'}
@@ -106,7 +113,6 @@ export default function AlertasPage() {
         ))}
       </div>
 
-      {/* Alerts List */}
       <div className="rounded-xl border border-border bg-card">
         {filteredAlerts.length > 0 ? (
           <div className="divide-y divide-border">
@@ -129,7 +135,7 @@ export default function AlertasPage() {
                   >
                     <Icon className={cn('size-5', config.color)} />
                   </div>
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{alert.title}</p>
                       {!alert.read && (
@@ -166,7 +172,7 @@ export default function AlertasPage() {
             </div>
             <p className="mt-4 font-medium">Nenhum alerta</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Você está em dia com todas as notificações.
+              Ainda não há alertas disponíveis.
             </p>
           </div>
         )}

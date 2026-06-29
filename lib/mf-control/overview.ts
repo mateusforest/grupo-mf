@@ -1,11 +1,5 @@
 import 'server-only'
 
-import {
-  activities as mockActivities,
-  financialSummary,
-  products as mockProducts,
-  revenueByMonth,
-} from '@/lib/mock-data'
 import type { Activity } from '@/lib/types'
 import type {
   DashboardOverviewChartPoint,
@@ -54,7 +48,7 @@ interface HealthRow {
   checked_at: string
 }
 
-type OverviewSource = 'mock' | 'database' | 'empty'
+type OverviewSource = 'database' | 'empty'
 
 export type DashboardOverviewResponse = Omit<DashboardOverviewData, 'source'> & {
   source: OverviewSource
@@ -105,52 +99,6 @@ function createEmptyMetric(label: string): DashboardOverviewMetric {
     value: 0,
     change: 0,
     changeLabel: 'aguardando dados reais',
-  }
-}
-
-function buildMockOverview(warning?: string): DashboardOverviewResponse {
-  const totalClients = mockProducts.reduce((acc, product) => acc + product.clients, 0)
-  const totalAiTokens = mockProducts.reduce((acc, product) => acc + product.aiConsumption, 0)
-  const totalAiCost = mockProducts.reduce((acc, product) => acc + product.aiCost, 0)
-
-  return {
-    source: 'mock',
-    isMock: true,
-    generatedAt: new Date().toISOString(),
-    summary: {
-      totalRevenue: createMetric('Receita Total', financialSummary.grossRevenue, financialSummary.grossRevenue * 0.89, 'vs per. anterior'),
-      mrr: createMetric('MRR', financialSummary.mrr, financialSummary.mrr * 0.92, 'vs per. anterior'),
-      arr: createMetric('ARR', financialSummary.arr, financialSummary.arr * 0.87, 'vs per. anterior'),
-      activeCustomers: createMetric('Clientes Ativos', totalClients, Math.round(totalClients * 0.95), 'vs per. anterior'),
-      newCustomers: createMetric('Novos Clientes', 28, 25, 'vs per. anterior'),
-      aiTokens: createMetric('Consumo IA', totalAiTokens, Math.round(totalAiTokens * 0.84), 'vs per. anterior'),
-      aiCost: createMetric('Custo IA', totalAiCost, Math.round(totalAiCost * 1.03), 'vs per. anterior'),
-      estimatedProfit: createMetric('Lucro Estimado', financialSummary.profit, Math.round(financialSummary.profit * 0.91), 'vs per. anterior'),
-      systemsOnline: mockProducts.length,
-      criticalAlerts: 2,
-    },
-    products: mockProducts.map((product) => ({
-      id: product.id,
-      slug: product.id,
-      name: product.name,
-      description: product.description,
-      status: product.status,
-      revenue: product.revenue,
-      mrr: product.mrr,
-      arr: product.mrr * 12,
-      activeCustomers: product.clients,
-      newCustomers: 0,
-      canceledCustomers: 0,
-      aiTokens: product.aiConsumption,
-      aiCost: product.aiCost,
-      estimatedProfit: Math.round(product.revenue * 0.86),
-      growth: product.growth,
-    })),
-    growth: revenueByMonth,
-    activities: mockActivities,
-    warnings: warning ? [warning] : ['Exibindo dados demonstrativos apenas no ambiente local sem Supabase configurado.'],
-    warning,
-    metricsNote: 'Modo local com dados mock; não representa operação real.',
   }
 }
 
@@ -244,8 +192,9 @@ export async function getDashboardOverviewState(): Promise<DashboardOverviewStat
     return {
       ok: true,
       status: 200,
-      data: buildMockOverview(
-        'Supabase não configurado; exibindo dados demonstrativos apenas para ambiente local.'
+      data: buildEmptyOverview(
+        [],
+        'Supabase não configurado. Nenhum dado operacional está disponível no momento.'
       ),
     }
   }
@@ -404,7 +353,7 @@ export async function getDashboardOverviewState(): Promise<DashboardOverviewStat
             product: productNames.get(alert.product_id ?? '') ?? 'Grupo MF',
             timestamp: alert.created_at,
           }))
-        : mockActivities
+        : []
 
     return {
       ok: true,
