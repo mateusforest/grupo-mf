@@ -1,6 +1,3 @@
-'use client'
-
-import { useState } from 'react'
 import {
   Building2,
   Palette,
@@ -16,12 +13,10 @@ import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { getDashboardSettingsData } from '@/lib/mf-control/settings'
 
-export default function ConfiguracoesPage() {
-  const [companyName, setCompanyName] = useState('')
-  const [companyEmail, setCompanyEmail] = useState('')
-  const integrations: Array<{ name: string; description: string }> = []
-  const logs: Array<{ action: string; user: string; time: string }> = []
+export default async function ConfiguracoesPage() {
+  const settings = await getDashboardSettingsData()
 
   return (
     <div className="space-y-6">
@@ -71,24 +66,20 @@ export default function ConfiguracoesPage() {
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Nome da Empresa</label>
-                <Input
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  placeholder="Sem dados conectados"
-                />
+                <Input value={settings.companyName} placeholder="Sem dados conectados" readOnly />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Email Principal</label>
                 <Input
                   type="email"
-                  value={companyEmail}
-                  onChange={(e) => setCompanyEmail(e.target.value)}
+                  value={settings.companyEmail}
                   placeholder="Sem dados conectados"
+                  readOnly
                 />
               </div>
             </div>
             <div className="mt-6">
-              <Button className="gap-2">
+              <Button className="gap-2" disabled>
                 <Save className="size-4" />
                 Salvar Alterações
               </Button>
@@ -97,14 +88,20 @@ export default function ConfiguracoesPage() {
 
           <div className="rounded-xl border border-border bg-card p-5">
             <h3 className="font-semibold">Estrutura do Grupo</h3>
-            <p className="text-sm text-muted-foreground">Produtos do ecossistema</p>
+            <p className="text-sm text-muted-foreground">Produtos do ecossistema conectados ao banco</p>
             <div className="mt-4 space-y-3">
-              {['MF Labs', 'COS', 'TravelPro', 'TravelMatch', 'VUEI', 'EME'].map((product, index) => (
-                <div key={product} className="flex items-center justify-between rounded-lg bg-secondary/50 px-4 py-3">
-                  <span className="font-medium">{product}</span>
-                  <Badge variant="secondary">{index === 0 ? 'Labs' : 'Produto'}</Badge>
+              {settings.products.length > 0 ? (
+                settings.products.map((product) => (
+                  <div key={product.id} className="flex items-center justify-between rounded-lg bg-secondary/50 px-4 py-3">
+                    <span className="font-medium">{product.name}</span>
+                    <Badge variant="secondary">Produto</Badge>
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
+                  Nenhum produto conectado no momento.
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </TabsContent>
@@ -120,7 +117,7 @@ export default function ConfiguracoesPage() {
               <div className="space-y-2">
                 <p className="font-medium">Logo do Grupo MF</p>
                 <p className="text-sm text-muted-foreground">PNG, SVG ou JPG. Max 2MB.</p>
-                <Button variant="outline" size="sm">Alterar Logo</Button>
+                <Button variant="outline" size="sm" disabled>Alterar Logo</Button>
               </div>
             </div>
             <Separator className="my-6" />
@@ -145,12 +142,26 @@ export default function ConfiguracoesPage() {
         </TabsContent>
 
         <TabsContent value="integracoes" className="space-y-6">
-          <div className="rounded-xl border border-border bg-card p-8 text-center">
-            <p className="font-medium">Nenhuma integração disponível</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              As integrações aparecerão aqui quando houver dados reais conectados.
-            </p>
-            {integrations.length > 0 && null}
+          <div className="rounded-xl border border-border bg-card p-5">
+            <h3 className="font-semibold">Status das Integrações</h3>
+            <p className="text-sm text-muted-foreground">Leitura somente do ambiente atual, sem expor segredos</p>
+            <div className="mt-4 space-y-3">
+              {settings.integrations.map((integration) => (
+                <div key={integration.name} className="flex items-center justify-between rounded-lg bg-secondary/50 px-4 py-3">
+                  <div>
+                    <p className="font-medium">{integration.name}</p>
+                    <p className="text-sm text-muted-foreground">{integration.description}</p>
+                  </div>
+                  <Badge className={integration.configured ? 'bg-success/20 text-success' : 'bg-muted text-muted-foreground'}>
+                    {integration.name === 'Ambiente'
+                      ? settings.environment.name
+                      : integration.configured
+                        ? 'Configurado'
+                        : 'Não configurado'}
+                  </Badge>
+                </div>
+              ))}
+            </div>
           </div>
         </TabsContent>
 
@@ -164,11 +175,23 @@ export default function ConfiguracoesPage() {
         </TabsContent>
 
         <TabsContent value="seguranca" className="space-y-6">
-          <div className="rounded-xl border border-border bg-card p-8 text-center">
-            <p className="font-medium">Nenhuma configuração de segurança disponível</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Os detalhes de autenticação e sessão aparecerão aqui quando houver dados reais.
-            </p>
+          <div className="rounded-xl border border-border bg-card p-5">
+            <h3 className="font-semibold">Segurança</h3>
+            <p className="text-sm text-muted-foreground">Somente status de configuração, sem tokens ou segredos</p>
+            <div className="mt-4 space-y-3">
+              <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-4 py-3">
+                <span className="font-medium">Supabase Service Role</span>
+                <Badge className={settings.integrations.find((item) => item.name === 'Supabase')?.configured ? 'bg-success/20 text-success' : 'bg-muted text-muted-foreground'}>
+                  {settings.integrations.find((item) => item.name === 'Supabase')?.configured ? 'Configurado' : 'Não configurado'}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-4 py-3">
+                <span className="font-medium">Chave interna MF</span>
+                <Badge className={settings.integrations.find((item) => item.name === 'APIs Internas')?.configured ? 'bg-success/20 text-success' : 'bg-muted text-muted-foreground'}>
+                  {settings.integrations.find((item) => item.name === 'APIs Internas')?.configured ? 'Configurado' : 'Não configurado'}
+                </Badge>
+              </div>
+            </div>
           </div>
         </TabsContent>
 
@@ -190,7 +213,6 @@ export default function ConfiguracoesPage() {
             <p className="mt-1 text-sm text-muted-foreground">
               O histórico do sistema aparecerá aqui quando houver dados reais.
             </p>
-            {logs.length > 0 && null}
           </div>
         </TabsContent>
       </Tabs>

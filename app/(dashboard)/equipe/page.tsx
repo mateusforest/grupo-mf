@@ -1,7 +1,6 @@
-'use client'
-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { getDashboardTeamMembers } from '@/lib/mf-control/team'
 
 const roleConfig = {
   founder: { label: 'Founder', color: 'bg-primary/20 text-primary' },
@@ -19,11 +18,20 @@ const permissions = {
   support: ['Clientes', 'Alertas', 'Monitoramento'],
 }
 
-export default function EquipePage() {
-  const teamMembers: Array<{
-    id: string
-    role: keyof typeof roleConfig
-  }> = []
+const statusConfig: Record<string, string> = {
+  active: 'bg-success/20 text-success',
+  inactive: 'bg-muted text-muted-foreground',
+}
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  }).format(new Date(value))
+}
+
+export default async function EquipePage() {
+  const teamMembers = await getDashboardTeamMembers()
 
   return (
     <div className="space-y-6">
@@ -34,11 +42,41 @@ export default function EquipePage() {
             Gestão de usuários e permissões do MF Control Center.
           </p>
         </div>
-        <Button>Adicionar Membro</Button>
+        <Button disabled>Adicionar Membro</Button>
       </div>
 
       {teamMembers.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" />
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {teamMembers.map((member) => {
+            const role = roleConfig[member.role as keyof typeof roleConfig] ?? {
+              label: member.role,
+              color: 'bg-muted text-muted-foreground',
+            }
+
+            return (
+              <div key={member.id} className="rounded-xl border border-border bg-card p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-semibold">{member.name}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{member.email}</p>
+                  </div>
+                  <Badge className={statusConfig[member.status] ?? 'bg-muted text-muted-foreground'}>
+                    {member.status}
+                  </Badge>
+                </div>
+
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <Badge className={role.color}>{role.label}</Badge>
+                </div>
+
+                <div className="mt-4 space-y-1 text-sm text-muted-foreground">
+                  <p>Cargo: {role.label}</p>
+                  <p>Criado em: {formatDate(member.createdAt)}</p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
       ) : (
         <div className="rounded-xl border border-border bg-card p-8 text-center">
           <p className="font-medium">Nenhum membro cadastrado</p>
