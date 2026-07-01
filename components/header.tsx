@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Search, Bell, Menu, X, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -23,14 +24,27 @@ const notifications = [
   { id: 3, title: 'Falha de pagamento', description: 'Marketing Pro - EME', time: '1h' },
 ]
 
-export function Header() {
+export function Header({ userEmail }: { userEmail?: string | null }) {
+  const router = useRouter()
   const [cosModalOpen, setCosModalOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [logoutLoading, setLogoutLoading] = useState(false)
+
+  async function handleLogout() {
+    setLogoutLoading(true)
+
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+      router.push('/login')
+      router.refresh()
+    } finally {
+      setLogoutLoading(false)
+    }
+  }
 
   return (
     <>
       <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-xl lg:px-6">
-        {/* Mobile menu button */}
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden">
@@ -43,7 +57,6 @@ export function Header() {
           </SheetContent>
         </Sheet>
 
-        {/* Search — centered */}
         <div className="flex flex-1 justify-center">
           <div className="relative w-full max-w-xl">
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -57,9 +70,7 @@ export function Header() {
           </div>
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-1.5">
-          {/* COS Button */}
           <Button
             onClick={() => setCosModalOpen(true)}
             size="sm"
@@ -76,7 +87,6 @@ export function Header() {
             <Sparkles className="size-4" />
           </Button>
 
-          {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="relative size-9 text-muted-foreground hover:text-foreground">
@@ -104,7 +114,6 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="ml-0.5 size-9 rounded-full">
@@ -118,15 +127,23 @@ export function Header() {
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>
                 <div className="flex flex-col">
-                  <span>Marcus Ferreira</span>
-                  <span className="font-normal text-muted-foreground">marcus@grupomf.com</span>
+                  <span>MF Control Center</span>
+                  <span className="font-normal text-muted-foreground">
+                    {userEmail ?? 'Usuário autenticado'}
+                  </span>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Perfil</DropdownMenuItem>
               <DropdownMenuItem>Configurações</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">Sair</DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-destructive"
+                disabled={logoutLoading}
+                onClick={handleLogout}
+              >
+                {logoutLoading ? 'Saindo...' : 'Sair'}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
