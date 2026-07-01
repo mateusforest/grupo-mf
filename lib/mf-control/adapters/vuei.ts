@@ -104,7 +104,6 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'financial.revenue',
     'overview.totalRevenue',
     'overview.revenue',
-    'credits.transactions.total',
   ])
 
   const mrr = pickFirstNumber(data, [
@@ -116,7 +115,6 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'finance.mrr',
     'financial.mrr',
     'overview.mrr',
-    'credits.balances.total',
   ])
 
   const arr = pickFirstNumber(data, [
@@ -202,7 +200,6 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
   const aiCost = pickFirstNumber(data, [
     'aiCost',
     'ai_cost',
-    'cost',
     'custoIa',
     'custo_ia',
     'ai.cost',
@@ -211,9 +208,7 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'ia.custo',
     'metrics.aiCost',
     'metrics.ai_cost',
-    'metrics.cost',
     'overview.aiCost',
-    'ai.usageLogs.totalCreditsCharged',
   ])
 
   const estimatedProfit = pickFirstNumber(data, [
@@ -235,14 +230,14 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
 
   const normalizedTotalRevenue = totalRevenue ?? 0
   const normalizedMrr = mrr ?? 0
-  const normalizedArr = arr ?? normalizedMrr * 12
+  const normalizedArr = arr ?? 0
   const normalizedActiveCustomers = activeCustomers ?? activeClients ?? 0
   const normalizedNewCustomers = newCustomers ?? leadClients ?? 0
   const normalizedCanceledCustomers =
     canceledCustomers ?? ((archivedClients ?? 0) + (inactiveClients ?? 0))
   const normalizedAiTokens = aiTokens ?? 0
   const normalizedAiCost = aiCost ?? 0
-  const normalizedEstimatedProfit = estimatedProfit ?? Math.max(normalizedTotalRevenue - normalizedAiCost, 0)
+  const normalizedEstimatedProfit = estimatedProfit ?? 0
 
   if (normalizedActiveCustomers === 0 && normalizedAiTokens === 0 && normalizedAiCost === 0) {
     return null
