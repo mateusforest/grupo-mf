@@ -27,7 +27,7 @@ function formatNumber(value: number | null) {
 }
 
 function formatDate(value: string | null) {
-  if (!value) return 'Aguardando primeira sincronização'
+  if (!value) return 'Produto cadastrado. Aguardando integração.'
 
   return new Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'short',
@@ -122,7 +122,7 @@ export default async function ProductsPage() {
                     )}
                   >
                     {product.growth === null
-                      ? 'Sem snapshot'
+                      ? 'Produto cadastrado. Aguardando integração.'
                       : `${product.growth > 0 ? '+' : ''}${product.growth}%`}
                   </p>
                 </div>

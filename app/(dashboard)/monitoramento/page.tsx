@@ -20,7 +20,7 @@ const serviceLabels: Record<string, string> = {
 }
 
 function formatDate(value: string | null) {
-  if (!value) return 'Aguardando verificação'
+  if (!value) return 'Produto cadastrado. Aguardando integração.'
 
   return new Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'short',
@@ -62,7 +62,7 @@ export default async function MonitoramentoPage() {
             <div>
               <p className="font-semibold">Nenhum monitoramento disponível</p>
               <p className="text-sm text-muted-foreground">
-                Conecte os serviços para acompanhar o status operacional.
+                Os produtos já estão cadastrados. Aguardando integração dos serviços.
               </p>
             </div>
           </>
@@ -117,7 +117,9 @@ export default async function MonitoramentoPage() {
                 </div>
 
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Última verificação: {formatDate(product.lastCheckedAt)}
+                  {product.hasRecords
+                    ? `Última verificação: ${formatDate(product.lastCheckedAt)}`
+                    : 'Produto cadastrado. Aguardando integração.'}
                 </p>
 
                 <div className="mt-5 grid gap-3">
@@ -142,7 +144,7 @@ export default async function MonitoramentoPage() {
                         <div className="mt-2 grid gap-1 text-xs text-muted-foreground">
                           <p>Latência: {service.latencyMs !== null ? `${service.latencyMs} ms` : '—'}</p>
                           <p>Última verificação: {formatDate(service.checkedAt)}</p>
-                          <p>Mensagem: {service.message || 'Sem mensagem'}</p>
+                          <p>Mensagem: {service.message || 'Produto cadastrado. Aguardando integração.'}</p>
                         </div>
                       </div>
                     )

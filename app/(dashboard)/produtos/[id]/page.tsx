@@ -27,7 +27,7 @@ function formatNumber(value: number | null) {
 }
 
 function formatDate(value: string | null) {
-  if (!value) return 'Aguardando primeira sincronização'
+  if (!value) return 'Produto cadastrado. Aguardando integração.'
 
   return new Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'full',
@@ -79,9 +79,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           </>
         ) : (
           <>
-            <p className="font-medium">Sem snapshot para este produto</p>
+            <p className="font-medium">Produto cadastrado. Aguardando integração.</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              O produto está cadastrado no Grupo MF, mas ainda não possui sincronização de métricas.
+              O produto já existe no MF Control Center, mas ainda não recebeu dados operacionais reais.
             </p>
           </>
         )}

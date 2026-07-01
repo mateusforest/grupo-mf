@@ -53,7 +53,7 @@ export default async function IAPage() {
                   <div>
                     <p className="font-medium">{product.name}</p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {product.hasUsage ? 'Uso real agregado em mf_ai_usage' : 'Sem uso de IA registrado'}
+                      {product.hasUsage ? 'Uso real agregado em mf_ai_usage' : 'Produto cadastrado. Aguardando integração.'}
                     </p>
                   </div>
                   <div>
@@ -174,7 +174,7 @@ export default async function IAPage() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Estado</p>
-                  <p className="mt-1 font-medium">{product.hasUsage ? 'Com uso real' : 'Sem uso real'}</p>
+                  <p className="mt-1 font-medium">{product.hasUsage ? 'Com uso real' : 'Produto cadastrado. Aguardando integração.'}</p>
                 </div>
               </div>
             ))

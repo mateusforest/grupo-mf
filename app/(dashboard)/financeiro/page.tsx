@@ -21,7 +21,7 @@ function formatPercent(value: number | null) {
 }
 
 function formatDate(value: string | null) {
-  if (!value) return 'Aguardando primeira sincronização'
+  if (!value) return 'Produto cadastrado. Aguardando integração.'
 
   return new Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'short',
@@ -85,7 +85,7 @@ export default async function FinanceiroPage() {
                   <div>
                     <p className="font-medium">{product.name}</p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {product.hasSnapshot ? `Última sincronização: ${formatDate(product.lastSyncAt)}` : 'Sem snapshot real'}
+                      {product.hasSnapshot ? `Última sincronização: ${formatDate(product.lastSyncAt)}` : 'Produto cadastrado. Aguardando integração.'}
                     </p>
                   </div>
                   <div>
@@ -118,7 +118,7 @@ export default async function FinanceiroPage() {
                   <div>
                     <p className="font-medium">{product.name}</p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {product.hasSnapshot ? 'Custo de IA do último snapshot' : 'Sem custo real disponível'}
+                      {product.hasSnapshot ? 'Custo de IA do último snapshot' : 'Produto cadastrado. Aguardando integração.'}
                     </p>
                   </div>
                   <p className="font-medium tabular-nums">{formatCurrency(product.aiCost)}</p>
@@ -171,7 +171,7 @@ export default async function FinanceiroPage() {
                   <div>
                     <p className="font-medium">{product.name}</p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {product.hasSnapshot ? `Última sincronização: ${formatDate(product.lastSyncAt)}` : 'Sem snapshot real'}
+                      {product.hasSnapshot ? `Última sincronização: ${formatDate(product.lastSyncAt)}` : 'Produto cadastrado. Aguardando integração.'}
                     </p>
                   </div>
                   <div>

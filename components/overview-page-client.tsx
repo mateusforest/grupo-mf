@@ -43,7 +43,7 @@ export function OverviewPageClient({ overview }: OverviewPageClientProps) {
         <p className="mt-1 text-muted-foreground">Controle executivo do ecossistema Grupo MF.</p>
         {overview.warnings.length > 0 && (
           <p className="mt-2 text-xs text-muted-foreground">
-            {overview.warnings.join(' ')}
+            Produto cadastrado. Aguardando integração.
           </p>
         )}
       </div>
