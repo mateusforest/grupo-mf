@@ -83,6 +83,17 @@ create table if not exists public.mf_team_members (
   created_at timestamptz not null default timezone('utc', now())
 );
 
+create table if not exists public.mf_lab_projects (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  description text not null,
+  status text not null check (status in ('planning', 'development', 'testing', 'production')),
+  progress integer not null default 0 check (progress >= 0 and progress <= 100),
+  team text[] not null default '{}',
+  created_at timestamptz not null default timezone('utc', now()),
+  updated_at timestamptz not null default timezone('utc', now())
+);
+
 create table if not exists public.mf_sync_logs (
   id uuid primary key default gen_random_uuid(),
   product_id uuid not null references public.mf_products(id) on delete cascade,
@@ -106,6 +117,9 @@ create index if not exists idx_mf_system_health_product_checked_at
 
 create index if not exists idx_mf_alerts_product_created_at
   on public.mf_alerts(product_id, created_at desc);
+
+create index if not exists idx_mf_lab_projects_status_created_at
+  on public.mf_lab_projects(status, created_at desc);
 
 create index if not exists idx_mf_sync_logs_product_started_at
   on public.mf_sync_logs(product_id, started_at desc);
