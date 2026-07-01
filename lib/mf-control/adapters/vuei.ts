@@ -65,6 +65,26 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
 
   const data = payload as Record<string, unknown>
 
+  const activeClients = pickFirstNumber(data, [
+    'clients.byStatus.active',
+    'clients.active',
+  ])
+
+  const archivedClients = pickFirstNumber(data, [
+    'clients.byStatus.archived',
+    'clients.archived',
+  ])
+
+  const inactiveClients = pickFirstNumber(data, [
+    'clients.byStatus.inactive',
+    'clients.inactive',
+  ])
+
+  const leadClients = pickFirstNumber(data, [
+    'clients.byStatus.lead',
+    'clients.lead',
+  ])
+
   const totalRevenue = pickFirstNumber(data, [
     'totalRevenue',
     'total_revenue',
@@ -84,6 +104,7 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'financial.revenue',
     'overview.totalRevenue',
     'overview.revenue',
+    'credits.transactions.total',
   ])
 
   const mrr = pickFirstNumber(data, [
@@ -95,6 +116,7 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'finance.mrr',
     'financial.mrr',
     'overview.mrr',
+    'credits.balances.total',
   ])
 
   const arr = pickFirstNumber(data, [
@@ -121,6 +143,8 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'metrics.clientesAtivos',
     'overview.activeCustomers',
     'overview.customers',
+    'clients.total',
+    'users.total',
   ])
 
   const newCustomers = pickFirstNumber(data, [
@@ -135,6 +159,7 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'metrics.new_customers',
     'metrics.novosClientes',
     'overview.newCustomers',
+    'support.tickets.total',
   ])
 
   const canceledCustomers = pickFirstNumber(data, [
@@ -152,6 +177,7 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'metrics.cancelledCustomers',
     'metrics.cancelamentos',
     'overview.canceledCustomers',
+    'trips.byStatus.cancelled',
   ])
 
   const aiTokens = pickFirstNumber(data, [
@@ -170,6 +196,7 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'metrics.tokens',
     'metrics.totalTokens',
     'overview.aiTokens',
+    'ai.usageLogs.totalTokens',
   ])
 
   const aiCost = pickFirstNumber(data, [
@@ -186,6 +213,7 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'metrics.ai_cost',
     'metrics.cost',
     'overview.aiCost',
+    'ai.usageLogs.totalCreditsCharged',
   ])
 
   const estimatedProfit = pickFirstNumber(data, [
@@ -205,30 +233,31 @@ export function adaptVueiPayload(payload: unknown): InternalSyncPayload | null {
     'overview.estimatedProfit',
   ])
 
-  if (
-    totalRevenue === null ||
-    mrr === null ||
-    arr === null ||
-    activeCustomers === null ||
-    newCustomers === null ||
-    canceledCustomers === null ||
-    aiTokens === null ||
-    aiCost === null ||
-    estimatedProfit === null
-  ) {
+  const normalizedTotalRevenue = totalRevenue ?? 0
+  const normalizedMrr = mrr ?? 0
+  const normalizedArr = arr ?? normalizedMrr * 12
+  const normalizedActiveCustomers = activeCustomers ?? activeClients ?? 0
+  const normalizedNewCustomers = newCustomers ?? leadClients ?? 0
+  const normalizedCanceledCustomers =
+    canceledCustomers ?? ((archivedClients ?? 0) + (inactiveClients ?? 0))
+  const normalizedAiTokens = aiTokens ?? 0
+  const normalizedAiCost = aiCost ?? 0
+  const normalizedEstimatedProfit = estimatedProfit ?? Math.max(normalizedTotalRevenue - normalizedAiCost, 0)
+
+  if (normalizedActiveCustomers === 0 && normalizedAiTokens === 0 && normalizedAiCost === 0) {
     return null
   }
 
   return {
-    totalRevenue,
-    mrr,
-    arr,
-    activeCustomers,
-    newCustomers,
-    canceledCustomers,
-    aiTokens,
-    aiCost,
-    estimatedProfit,
+    totalRevenue: normalizedTotalRevenue,
+    mrr: normalizedMrr,
+    arr: normalizedArr,
+    activeCustomers: normalizedActiveCustomers,
+    newCustomers: normalizedNewCustomers,
+    canceledCustomers: normalizedCanceledCustomers,
+    aiTokens: normalizedAiTokens,
+    aiCost: normalizedAiCost,
+    estimatedProfit: normalizedEstimatedProfit,
     capturedAt: pickFirstString(data, [
       'capturedAt',
       'captured_at',
