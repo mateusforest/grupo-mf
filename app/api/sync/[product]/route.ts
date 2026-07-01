@@ -1,62 +1,11 @@
 import { apiError, apiSuccess } from '@/lib/api-response'
 import { getEnvValue } from '@/lib/env'
+import { adaptProductPayload } from '@/lib/mf-control/adapters'
 import { createSupabaseAdminClient } from '@/lib/supabase/admin'
 import { isSupabaseConfigured } from '@/lib/supabase/config'
 
-interface SyncPayload {
-  totalRevenue: number
-  mrr: number
-  arr: number
-  activeCustomers: number
-  newCustomers: number
-  canceledCustomers: number
-  aiTokens: number
-  aiCost: number
-  estimatedProfit: number
-  capturedAt?: string
-}
-
-function isNumber(value: unknown): value is number {
-  return typeof value === 'number' && Number.isFinite(value)
-}
-
 function isValidCapturedAt(value: string) {
   return !Number.isNaN(new Date(value).getTime())
-}
-
-function parsePayload(payload: unknown): SyncPayload | null {
-  if (!payload || typeof payload !== 'object') {
-    return null
-  }
-
-  const data = payload as Record<string, unknown>
-
-  if (
-    !isNumber(data.totalRevenue) ||
-    !isNumber(data.mrr) ||
-    !isNumber(data.arr) ||
-    !isNumber(data.activeCustomers) ||
-    !isNumber(data.newCustomers) ||
-    !isNumber(data.canceledCustomers) ||
-    !isNumber(data.aiTokens) ||
-    !isNumber(data.aiCost) ||
-    !isNumber(data.estimatedProfit)
-  ) {
-    return null
-  }
-
-  return {
-    totalRevenue: data.totalRevenue,
-    mrr: data.mrr,
-    arr: data.arr,
-    activeCustomers: data.activeCustomers,
-    newCustomers: data.newCustomers,
-    canceledCustomers: data.canceledCustomers,
-    aiTokens: data.aiTokens,
-    aiCost: data.aiCost,
-    estimatedProfit: data.estimatedProfit,
-    capturedAt: typeof data.capturedAt === 'string' ? data.capturedAt : undefined,
-  }
 }
 
 export async function POST(
@@ -71,19 +20,7 @@ export async function POST(
   }
 
   const { product: productSlug } = await context.params
-  const payload = parsePayload(await request.json().catch(() => null))
-
-  if (!payload) {
-    return apiError(
-      'INVALID_PAYLOAD',
-      'Payload inválido. Envie todas as métricas numéricas obrigatórias.',
-      400
-    )
-  }
-
-  if (payload.capturedAt && !isValidCapturedAt(payload.capturedAt)) {
-    return apiError('INVALID_CAPTURED_AT', 'capturedAt inválido. Envie uma data ISO válida.', 400)
-  }
+  const rawPayload = await request.json().catch(() => null)
 
   if (!isSupabaseConfigured()) {
     return apiError('SUPABASE_NOT_CONFIGURED', 'Supabase ainda não foi configurado no ambiente.', 503)
@@ -104,19 +41,79 @@ export async function POST(
     return apiError('PRODUCT_NOT_FOUND', 'Produto não encontrado.', 404)
   }
 
+  const { data: payloadLog, error: payloadLogError } = await supabase
+    .from('mf_product_payloads')
+    .insert({
+      product_id: product.id,
+      status: 'received',
+      payload: rawPayload ?? { _rawPayload: null },
+    })
+    .select('id')
+    .single()
+
+  if (payloadLogError) {
+    return apiError(
+      'PAYLOAD_LOG_FAILED',
+      'Não foi possível armazenar o payload bruto.',
+      500,
+      payloadLogError.message
+    )
+  }
+
+  const { adapterName, payload } = adaptProductPayload(productSlug, rawPayload)
+
+  if (!payload) {
+    await supabase
+      .from('mf_product_payloads')
+      .update({
+        status: 'error',
+        error_message: `Adapter ${adapterName} não conseguiu interpretar o payload.`,
+        processed_at: new Date().toISOString(),
+      })
+      .eq('id', payloadLog.id)
+
+    return apiError(
+      'INVALID_PAYLOAD',
+      'Payload inválido. Não foi possível interpretar as métricas recebidas para este produto.',
+      400
+    )
+  }
+
+  if (payload.capturedAt && !isValidCapturedAt(payload.capturedAt)) {
+    await supabase
+      .from('mf_product_payloads')
+      .update({
+        status: 'error',
+        error_message: 'capturedAt inválido.',
+        processed_at: new Date().toISOString(),
+      })
+      .eq('id', payloadLog.id)
+
+    return apiError('INVALID_CAPTURED_AT', 'capturedAt inválido. Envie uma data ISO válida.', 400)
+  }
+
   const startedAt = new Date().toISOString()
   const { data: log, error: logError } = await supabase
     .from('mf_sync_logs')
     .insert({
       product_id: product.id,
       status: 'running',
-      message: `Sync started for ${product.slug}`,
+      message: `Sync started for ${product.slug} via adapter ${adapterName}`,
       started_at: startedAt,
     })
     .select('id')
     .single()
 
   if (logError) {
+    await supabase
+      .from('mf_product_payloads')
+      .update({
+        status: 'error',
+        error_message: logError.message,
+        processed_at: new Date().toISOString(),
+      })
+      .eq('id', payloadLog.id)
+
     return apiError('SYNC_LOG_START_FAILED', 'Não foi possível iniciar o log de sync.', 500, logError.message)
   }
 
@@ -147,28 +144,48 @@ export async function POST(
       .from('mf_sync_logs')
       .update({
         status: 'success',
-        message: `Sync completed for ${product.slug}`,
+        message: `Sync completed for ${product.slug} via adapter ${adapterName}`,
         finished_at: finishedAt,
       })
       .eq('id', log.id)
 
+    await supabase
+      .from('mf_product_payloads')
+      .update({
+        status: 'processed',
+        processed_at: finishedAt,
+      })
+      .eq('id', payloadLog.id)
+
     return apiSuccess({
       product: product.slug,
+      adapter: adapterName,
       snapshotCapturedAt: capturedAt,
+      payloadLogId: payloadLog.id,
       syncLogId: log.id,
       message: 'Sync concluído com sucesso.',
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erro inesperado ao salvar snapshot.'
+    const finishedAt = new Date().toISOString()
 
     await supabase
       .from('mf_sync_logs')
       .update({
         status: 'error',
         message,
-        finished_at: new Date().toISOString(),
+        finished_at: finishedAt,
       })
       .eq('id', log.id)
+
+    await supabase
+      .from('mf_product_payloads')
+      .update({
+        status: 'error',
+        error_message: message,
+        processed_at: finishedAt,
+      })
+      .eq('id', payloadLog.id)
 
     return apiError('SYNC_FAILED', 'Falha ao salvar métricas do produto.', 500, message)
   }

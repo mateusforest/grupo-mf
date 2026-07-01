@@ -94,6 +94,16 @@ create table if not exists public.mf_lab_projects (
   updated_at timestamptz not null default timezone('utc', now())
 );
 
+create table if not exists public.mf_product_payloads (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid not null references public.mf_products(id) on delete cascade,
+  status text not null default 'received',
+  payload jsonb not null,
+  error_message text,
+  received_at timestamptz not null default timezone('utc', now()),
+  processed_at timestamptz
+);
+
 create table if not exists public.mf_sync_logs (
   id uuid primary key default gen_random_uuid(),
   product_id uuid not null references public.mf_products(id) on delete cascade,
@@ -120,6 +130,9 @@ create index if not exists idx_mf_alerts_product_created_at
 
 create index if not exists idx_mf_lab_projects_status_created_at
   on public.mf_lab_projects(status, created_at desc);
+
+create index if not exists idx_mf_product_payloads_product_received_at
+  on public.mf_product_payloads(product_id, received_at desc);
 
 create index if not exists idx_mf_sync_logs_product_started_at
   on public.mf_sync_logs(product_id, started_at desc);
