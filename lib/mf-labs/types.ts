@@ -31,10 +31,15 @@ export type SubmissionAsset =
       kind: 'github'
       url: string
     }
+  | {
+      kind: 'public-url'
+      url: string
+    }
 
 export interface ProjectSubmissionDraft {
   asset: SubmissionAsset | null
   githubUrl: string
+  publicUrl: string
   name: string
   email: string
   company: string
