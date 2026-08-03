@@ -11,13 +11,19 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'MF Control Center',
-  description: 'Centro de comando do Grupo MF - Controle executivo do ecossistema',
+  title: 'Grupo MF',
+  description:
+    'Construindo a próxima geração de empresas de tecnologia, IA e inovação.',
   generator: 'v0.app',
+  icons: {
+    icon: [{ url: '/mf-logo.png', type: 'image/png' }],
+    apple: '/mf-logo.png',
+  },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#fafafa',
+  colorScheme: 'light',
+  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
 }
