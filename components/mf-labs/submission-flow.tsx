@@ -96,7 +96,7 @@ const analysisSteps = [
   'Preparando possíveis próximos encaminhamentos',
 ] as const
 
-const progressFrames = [14, 29, 46, 63, 78, 92] as const
+const progressFrames = [18, 34, 52, 71, 88, 100] as const
 
 function FieldLabel({
   htmlFor,
@@ -142,12 +142,15 @@ export function MfLabsSubmissionFlow() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [analysisProgress, setAnalysisProgress] = useState(progressFrames[0])
   const [analysisIndex, setAnalysisIndex] = useState(0)
+  const [analysisComplete, setAnalysisComplete] = useState(false)
+  const [projectReference, setProjectReference] = useState('')
 
   useEffect(() => {
     if (currentStep !== 3) {
       return
     }
 
+    setAnalysisComplete(false)
     setAnalysisProgress(progressFrames[0])
     setAnalysisIndex(0)
 
@@ -160,9 +163,15 @@ export function MfLabsSubmissionFlow() {
           setAnalysisIndex(Math.min(nextIndex, analysisSteps.length - 1))
         }
 
+        if (nextIndex === progressFrames.length - 1) {
+          window.clearInterval(interval)
+          setAnalysisIndex(analysisSteps.length - 1)
+          setAnalysisComplete(true)
+        }
+
         return progressFrames[nextIndex]
       })
-    }, 1200)
+    }, 700)
 
     return () => window.clearInterval(interval)
   }, [currentStep])
@@ -259,6 +268,7 @@ export function MfLabsSubmissionFlow() {
       return
     }
 
+    setProjectReference(`MF-2026-${String(Math.floor(Math.random() * 9000) + 1).padStart(4, '0')}`)
     setCurrentStep(3)
   }
 
@@ -623,12 +633,20 @@ export function MfLabsSubmissionFlow() {
                 <div className="overflow-hidden rounded-[28px] border border-border bg-[linear-gradient(180deg,rgba(248,250,252,1),rgba(239,246,255,0.72))] p-5">
                   <div className="flex items-center gap-3">
                     <div className="relative flex size-12 items-center justify-center rounded-full bg-white shadow-sm">
-                      <LoaderCircle className="size-5 animate-spin text-slate-900" />
+                      {analysisComplete ? (
+                        <CheckCircle2 className="size-5 text-slate-900" />
+                      ) : (
+                        <LoaderCircle className="size-5 animate-spin text-slate-900" />
+                      )}
                       <span className="absolute inset-0 rounded-full border border-blue-200/70" />
                     </div>
                     <div>
-                      <p className="font-medium">Processamento em andamento</p>
-                      <p className="text-sm text-muted-foreground">{analysisSteps[analysisIndex]}</p>
+                      <p className="font-medium">{analysisComplete ? 'Análise iniciada' : 'Processamento em andamento'}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {analysisComplete
+                          ? 'Seu projeto foi recebido com sucesso e entrou na fila de análise.'
+                          : analysisSteps[analysisIndex]}
+                      </p>
                     </div>
                   </div>
 
@@ -641,8 +659,8 @@ export function MfLabsSubmissionFlow() {
 
                   <div className="mt-5 grid gap-3 md:grid-cols-2">
                     {analysisSteps.map((step, index) => {
-                      const isDone = index < analysisIndex
-                      const isCurrent = index === analysisIndex
+                      const isDone = analysisComplete || index < analysisIndex
+                      const isCurrent = !analysisComplete && index === analysisIndex
 
                       return (
                         <div
@@ -679,7 +697,19 @@ export function MfLabsSubmissionFlow() {
                   </div>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="rounded-[24px] border border-emerald-200 bg-emerald-50/80 p-4">
+                  <p className="text-xs uppercase tracking-[0.2em] text-emerald-700">Status do envio</p>
+                  <p className="mt-2 text-sm leading-relaxed text-emerald-950">
+                    Seu projeto foi recebido com sucesso e entrou na fila de análise. Quando o relatório estiver
+                    disponível, você será notificado por e-mail.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="rounded-[24px] border border-border bg-background p-4">
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Identificador</p>
+                    <p className="mt-2 font-medium">{projectReference || 'MF-2026-0001'}</p>
+                  </div>
                   <div className="rounded-[24px] border border-border bg-background p-4">
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Projeto</p>
                     <p className="mt-2 font-medium">{draft.projectName}</p>
@@ -699,6 +729,8 @@ export function MfLabsSubmissionFlow() {
                     onClick={() => {
                       setDraft(initialDraft)
                       setErrors({})
+                      setAnalysisComplete(false)
+                      setProjectReference('')
                       setCurrentStep(1)
                     }}
                     className="h-11 rounded-full px-5"
