@@ -116,7 +116,7 @@ export function HeroSection() {
               <ArrowRight className="size-4" />
             </a>
             <a
-              href="#submeta-projeto"
+              href="/mf-labs"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-medium transition-colors hover:bg-muted"
             >
               Submeta seu projeto ao <span className="text-blue-600">MF Labs</span>

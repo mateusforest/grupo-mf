@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const config = getSupabasePublicConfig()
   const accessToken = request.cookies.get(MF_AUTH_ACCESS_COOKIE)?.value
-  const isPublicRoute = pathname === '/'
+  const isPublicRoute = pathname === '/' || pathname === '/mf-labs'
 
   if (!config) {
     return pathname === '/login' || isPublicRoute

@@ -53,7 +53,7 @@ export function SubmitProjectSection() {
             produto, monetização, riscos, diferenciais e potencial de crescimento.
           </p>
           <a
-            href="#"
+            href="/mf-labs"
             className="mt-7 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-colors hover:bg-foreground/90"
           >
             Submeter projeto
