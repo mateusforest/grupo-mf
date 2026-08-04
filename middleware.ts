@@ -3,6 +3,14 @@ import { createClient } from '@supabase/supabase-js'
 import { MF_AUTH_ACCESS_COOKIE } from '@/lib/auth/cookies'
 import { getSupabasePublicConfig } from '@/lib/supabase/config'
 
+const PUBLIC_ROUTES = new Set([
+  '/',
+  '/mf-labs',
+  '/investidores',
+  '/carreiras',
+  '/parceiros',
+])
+
 function buildLoginUrl(request: NextRequest) {
   const loginUrl = new URL('/login', request.url)
   const path = `${request.nextUrl.pathname}${request.nextUrl.search}`
@@ -18,7 +26,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const config = getSupabasePublicConfig()
   const accessToken = request.cookies.get(MF_AUTH_ACCESS_COOKIE)?.value
-  const isPublicRoute = pathname === '/' || pathname === '/mf-labs'
+  const isPublicRoute = PUBLIC_ROUTES.has(pathname)
 
   if (!config) {
     return pathname === '/login' || isPublicRoute
@@ -42,8 +50,10 @@ export async function middleware(request: NextRequest) {
   const { data, error } = await supabase.auth.getUser(accessToken)
 
   if (error || !data.user) {
-    if (pathname === '/login') {
-      return NextResponse.next()
+    if (isPublicRoute || pathname === '/login') {
+      const response = NextResponse.next()
+      response.cookies.delete(MF_AUTH_ACCESS_COOKIE)
+      return response
     }
 
     const response = NextResponse.redirect(buildLoginUrl(request))
