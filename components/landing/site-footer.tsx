@@ -18,7 +18,7 @@ const columns = [
     links: [
       { label: "Nosso Processo", href: "/mf-labs" },
       { label: "Metodologia", href: "/mf-labs" },
-      { label: "InovaÃ§Ã£o", href: "/mf-labs" },
+      { label: "Inovação", href: "/mf-labs" },
       { label: "Ecossistema", href: "/mf-labs" },
     ],
   },
@@ -43,8 +43,8 @@ export function SiteFooter() {
             <Image src="/mf-logo.png" alt="Grupo MF" width={28} height={28} className="size-7 object-contain" />
             <span className="text-sm font-semibold tracking-tight">GRUPO MF</span>
           </div>
-          <p className="mt-4 text-sm text-muted-foreground">Tecnologia Â· InteligÃªncia Â· Resultados</p>
-          <p className="mt-2 text-xs text-muted-foreground">Â© 2026 Grupo MF. Todos os direitos reservados.</p>
+          <p className="mt-4 text-sm text-muted-foreground">Tecnologia • Inteligência • Resultados</p>
+          <p className="mt-2 text-xs text-muted-foreground">© 2026 Grupo MF. Todos os direitos reservados.</p>
         </div>
 
         {columns.map((column) => (
