@@ -4,20 +4,23 @@ const cards = [
   {
     icon: Users,
     title: "Investidores",
-    description: "Parcerias estratégicas para construir empresas de software de longo prazo e alto impacto.",
+    description: "Parcerias estratÃ©gicas para construir empresas de software de longo prazo e alto impacto.",
     cta: "Quero conversar",
+    href: "/investidores",
   },
   {
     icon: User,
     title: "Colaboradores",
     description: "Estamos formando um time pequeno, ambicioso e apaixonado por tecnologia.",
     cta: "Trabalhe no Grupo MF",
+    href: "/carreiras",
   },
   {
     icon: Handshake,
     title: "Parceiros",
-    description: "Juntos vamos mais longe. Vamos transformar ideias em soluções reais para o mundo.",
+    description: "Juntos vamos mais longe. Vamos transformar ideias em soluÃ§Ãµes reais para o mundo.",
     cta: "Seja um parceiro",
+    href: "/parceiros",
   },
 ]
 
@@ -27,7 +30,7 @@ export function JoinSection() {
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <div className="text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Faça parte do Grupo MF
+            FaÃ§a parte do Grupo MF
           </p>
           <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
             Construa o futuro conosco.
@@ -45,7 +48,7 @@ export function JoinSection() {
               <h3 className="mt-5 text-lg font-semibold tracking-tight">{card.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.description}</p>
               <a
-                href="#"
+                href={card.href}
                 className="mt-5 inline-flex items-center gap-2 text-sm font-medium transition-colors hover:text-muted-foreground"
               >
                 {card.cta}

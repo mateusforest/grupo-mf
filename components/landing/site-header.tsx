@@ -5,8 +5,8 @@ const navLinks = [
   { label: "Produtos", href: "#produtos" },
   { label: "MF Labs", href: "#mf-labs" },
   { label: "Sobre", href: "#sobre" },
-  { label: "Se torne um investidor", href: "#investidores" },
-  { label: "Carreiras", href: "#carreiras" },
+  { label: "Se torne um investidor", href: "/investidores" },
+  { label: "Carreiras", href: "/carreiras" },
 ]
 
 export function SiteHeader() {

@@ -4,15 +4,33 @@ import { LinkedinIcon, GithubIcon } from "./brand-icons"
 const columns = [
   {
     title: "Produtos",
-    links: ["COS", "TravelPro", "TravelMatch", "VUEI", "EME", "+5 em desenvolvimento"],
+    links: [
+      { label: "COS", href: "#" },
+      { label: "TravelPro", href: "#" },
+      { label: "TravelMatch", href: "#" },
+      { label: "VUEI", href: "#" },
+      { label: "EME", href: "#" },
+      { label: "+5 em desenvolvimento", href: "#" },
+    ],
   },
   {
     title: "MF Labs",
-    links: ["Nosso Processo", "Metodologia", "Inovação", "Ecossistema"],
+    links: [
+      { label: "Nosso Processo", href: "/mf-labs" },
+      { label: "Metodologia", href: "/mf-labs" },
+      { label: "InovaÃ§Ã£o", href: "/mf-labs" },
+      { label: "Ecossistema", href: "/mf-labs" },
+    ],
   },
   {
     title: "Institucional",
-    links: ["Sobre", "Carreiras", "Investidores", "Parceiros", "Contato"],
+    links: [
+      { label: "Sobre", href: "/#sobre" },
+      { label: "Carreiras", href: "/carreiras" },
+      { label: "Investidores", href: "/investidores" },
+      { label: "Parceiros", href: "/parceiros" },
+      { label: "Contato", href: "/parceiros" },
+    ],
   },
 ]
 
@@ -25,8 +43,8 @@ export function SiteFooter() {
             <Image src="/mf-logo.png" alt="Grupo MF" width={28} height={28} className="size-7 object-contain" />
             <span className="text-sm font-semibold tracking-tight">GRUPO MF</span>
           </div>
-          <p className="mt-4 text-sm text-muted-foreground">Tecnologia · Inteligência · Resultados</p>
-          <p className="mt-2 text-xs text-muted-foreground">© 2026 Grupo MF. Todos os direitos reservados.</p>
+          <p className="mt-4 text-sm text-muted-foreground">Tecnologia Â· InteligÃªncia Â· Resultados</p>
+          <p className="mt-2 text-xs text-muted-foreground">Â© 2026 Grupo MF. Todos os direitos reservados.</p>
         </div>
 
         {columns.map((column) => (
@@ -34,9 +52,9 @@ export function SiteFooter() {
             <h3 className="text-sm font-semibold">{column.title}</h3>
             <ul className="mt-4 space-y-2.5">
               {column.links.map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                    {link}
+                <li key={link.label}>
+                  <a href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                    {link.label}
                   </a>
                 </li>
               ))}
