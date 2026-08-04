@@ -19,9 +19,9 @@ export function FounderSection() {
         <div className="py-6 md:py-20">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Sobre</p>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Mateus Forest</h2>
-          <p className="mt-2 text-sm font-medium text-muted-foreground">Founder Â· Grupo MF</p>
+          <p className="mt-2 text-sm font-medium text-muted-foreground">Founder • Grupo MF</p>
           <p className="mt-6 max-w-md text-pretty leading-relaxed text-muted-foreground">
-            Construo produtos de software focados em resolver problemas reais atravÃ©s de IA, automaÃ§Ã£o e experiÃªncias
+            Construo produtos de software focados em resolver problemas reais através de IA, automação e experiências
             extremamente simples.
           </p>
           <a

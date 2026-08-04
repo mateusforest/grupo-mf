@@ -4,7 +4,7 @@ const cards = [
   {
     icon: Users,
     title: "Investidores",
-    description: "Parcerias estratÃ©gicas para construir empresas de software de longo prazo e alto impacto.",
+    description: "Parcerias estratégicas para construir empresas de software de longo prazo e alto impacto.",
     cta: "Quero conversar",
     href: "/investidores",
   },
@@ -18,7 +18,7 @@ const cards = [
   {
     icon: Handshake,
     title: "Parceiros",
-    description: "Juntos vamos mais longe. Vamos transformar ideias em soluÃ§Ãµes reais para o mundo.",
+    description: "Juntos vamos mais longe. Vamos transformar ideias em soluções reais para o mundo.",
     cta: "Seja um parceiro",
     href: "/parceiros",
   },
@@ -30,7 +30,7 @@ export function JoinSection() {
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <div className="text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            FaÃ§a parte do Grupo MF
+            Faça parte do Grupo MF
           </p>
           <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
             Construa o futuro conosco.

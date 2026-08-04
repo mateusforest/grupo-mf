@@ -16,7 +16,6 @@ const orbitItems: OrbitItem[] = [
     id: "cos",
     name: "COS",
     logo: "/logos/cos.png",
-    // top-left
     className: "left-0 top-[6%] md:left-[2%]",
   },
   {
@@ -24,28 +23,24 @@ const orbitItems: OrbitItem[] = [
     name: "NIV",
     logo: "/logos/niv.png",
     logoContain: true,
-    // top-right (substitui TravelMatch)
     className: "right-0 top-[6%] md:right-[2%]",
   },
   {
     id: "travelpro",
     name: "TravelPro",
     logo: "/logos/travelpro.png",
-    // mid-left
     className: "left-0 top-[40%]",
   },
   {
     id: "vuei",
     name: "VUEI",
     logo: "/logos/vuei.png",
-    // mid-right
     className: "right-0 top-[42%]",
   },
   {
     id: "eme",
     name: "EME",
     logo: "/logos/eme.png",
-    // bottom-left
     className: "left-[4%] bottom-[8%]",
   },
   {
@@ -56,7 +51,6 @@ const orbitItems: OrbitItem[] = [
         <span className="text-lg font-semibold leading-none text-blue-600">+5</span>
       </div>
     ),
-    // bottom-right
     className: "right-[4%] bottom-[4%]",
   },
 ]
@@ -95,7 +89,6 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-2 lg:gap-8">
-        {/* Coluna de texto */}
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-blue-600">Grupo MF</p>
           <h1 className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
@@ -141,19 +134,15 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Composição orbital */}
         <div className="relative mx-auto w-full max-w-[520px]">
           <div className="relative aspect-square w-full">
-            {/* Órbitas tracejadas */}
             <div className="absolute left-1/2 top-1/2 size-[74%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-border/70" />
             <div className="absolute left-1/2 top-1/2 size-[100%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-border/50" />
-            {/* Pontos azuis na órbita */}
             <span className="absolute right-[14%] top-[6%] size-2 rounded-full bg-blue-600" />
             <span className="absolute left-[16%] top-[36%] size-2 rounded-full bg-blue-600" />
             <span className="absolute left-[22%] bottom-[10%] size-2 rounded-full bg-blue-600" />
             <span className="absolute right-[26%] bottom-[3%] size-2 rounded-full bg-blue-600" />
 
-            {/* Card central */}
             <div className="absolute left-1/2 top-1/2 flex aspect-[3/4] w-[42%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[26px] border border-border bg-background shadow-[0_30px_70px_-30px_rgba(0,0,0,0.4)]">
               <Image src="/mf-logo.png" alt="Grupo MF" width={96} height={96} className="size-16 object-contain md:size-20" />
               <span className="mt-3 text-[11px] font-medium uppercase tracking-[0.3em] text-muted-foreground md:text-xs">
@@ -165,7 +154,6 @@ export function HeroSection() {
               </span>
             </div>
 
-            {/* Tiles orbitais */}
             {orbitItems.map((item) => (
               <OrbitTile key={item.id} item={item} />
             ))}
