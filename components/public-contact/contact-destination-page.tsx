@@ -1,53 +1,48 @@
 'use client'
 
 import { useState } from 'react'
-import type { ComponentProps } from 'react'
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, MessageCircle } from 'lucide-react'
 import { SiteFooter } from '@/components/landing/site-footer'
 import { SiteHeader } from '@/components/landing/site-header'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import type { ContactFieldConfig, ContactPageConfig } from '@/lib/public-contact/types'
-import { cn } from '@/lib/utils'
+import { PartnerProjectSection } from '@/components/landing/partner-project-section'
+import type {
+  ContactFieldConfig,
+  ContactPageConfig,
+} from '@/lib/public-contact/types'
+import {
+  GROUP_WHATSAPP_NUMBER,
+  GROUP_WHATSAPP_LABEL,
+  whatsappUrl,
+} from '@/lib/public-contact/whatsapp'
 
-function TextArea(props: ComponentProps<'textarea'>) {
-  return (
-    <textarea
-      {...props}
-      className={cn(
-        'flex min-h-32 w-full rounded-2xl border border-input bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50',
-        props.className
-      )}
-    />
-  )
-}
-
-function renderField(
-  field: ContactFieldConfig,
-  value: string,
-  onChange: (nextValue: string) => void
-) {
-  if (field.type === 'textarea') {
+function ContactField({
+  field,
+  value,
+  onChange,
+}: {
+  field: ContactFieldConfig
+  value: string
+  onChange: (value: string) => void
+}) {
+  const common = {
+    id: field.id,
+    value,
+    required: !field.optional,
+    className: 'mf-form-input',
+  }
+  if (field.type === 'textarea')
     return (
-      <TextArea
-        id={field.id}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
+      <textarea
+        {...common}
+        rows={4}
+        maxLength={1500}
         placeholder={field.placeholder}
+        onChange={(event) => onChange(event.target.value)}
       />
     )
-  }
-
-  if (field.type === 'select') {
+  if (field.type === 'select')
     return (
-      <select
-        id={field.id}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="h-12 w-full rounded-2xl border border-input bg-background px-4 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-      >
+      <select {...common} onChange={(event) => onChange(event.target.value)}>
         <option value="">{field.placeholder}</option>
         {field.options?.map((option) => (
           <option key={option.value} value={option.value}>
@@ -56,147 +51,179 @@ function renderField(
         ))}
       </select>
     )
-  }
-
   return (
-    <Input
-      id={field.id}
+    <input
+      {...common}
       type={field.type}
-      value={value}
-      onChange={(event) => onChange(event.target.value)}
+      maxLength={field.type === 'url' ? 500 : 200}
+      autoComplete={
+        field.id === 'name'
+          ? 'name'
+          : field.id === 'email'
+            ? 'email'
+            : field.id === 'company' || field.id === 'firm'
+              ? 'organization'
+              : 'off'
+      }
       placeholder={field.placeholder}
-      className="h-12 rounded-2xl px-4"
+      onChange={(event) => onChange(event.target.value)}
     />
   )
 }
 
-export function ContactDestinationPage({ config }: { config: ContactPageConfig }) {
-  const [formValues, setFormValues] = useState<Record<string, string>>(
-    Object.fromEntries(config.formFields.map((field) => [field.id, '']))
-  )
-  const [submitted, setSubmitted] = useState(false)
-
-  function updateField(fieldId: string, nextValue: string) {
-    setFormValues((current) => ({ ...current, [fieldId]: nextValue }))
-  }
+export function ContactDestinationPage({
+  config,
+}: {
+  config: ContactPageConfig
+}) {
+  const [values, setValues] = useState<Record<string, string>>({})
+  const message = [
+    'Olá, Grupo MF! Gostaria de conversar sobre ' +
+      config.label.toLocaleLowerCase('pt-BR') +
+      '.',
+    '',
+    ...config.formFields.flatMap((field) => {
+      const value = (values[field.id] ?? '').trim()
+      if (!value) return []
+      const label =
+        field.options?.find((option) => option.value === value)?.label ?? value
+      return [field.label + ': ' + label]
+    }),
+  ].join('\n')
 
   return (
     <div className="mf-public min-h-screen font-sans">
       <SiteHeader />
-      <main id="conteudo" className="relative overflow-hidden">
-        <div className="absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.14),transparent_58%)]" />
-        <div className="absolute right-0 top-12 -z-10 h-72 w-72 rounded-full bg-blue-100/50 blur-3xl" />
-        <div className="absolute left-0 top-48 -z-10 h-64 w-64 rounded-full bg-slate-200/60 blur-3xl" />
-
-        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-12 md:px-8 md:py-16">
-          <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-            <div className="max-w-3xl">
-              <Badge variant="outline" className="rounded-full border-blue-200 bg-white/80 px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-blue-700 backdrop-blur">
-                {config.badge}
-              </Badge>
-              <h1 className="mt-5 text-balance text-4xl font-semibold leading-[1.02] tracking-tight md:text-6xl">
-                {config.heroTitle}
-              </h1>
-              <p className="mt-5 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-                {config.heroDescription}
-              </p>
+      <main id="conteudo">
+        <section className="mf-contact-hero">
+          <div className="mf-container">
+            <a href="/" className="mf-back-link">
+              <ArrowLeft size={15} /> Grupo MF
+            </a>
+            <p className="mf-eyebrow">Conexões / {config.label}</p>
+            <h1>
+              {config.heroTitle}
+              <br />
+              <span>{config.heroAccent}</span>
+            </h1>
+            <div className="mf-contact-hero-bottom">
+              <div>
+                <p>{config.heroDescription}</p>
+                <a href="#contato" className="mf-button">
+                  Vamos conversar <ArrowUpRight size={18} />
+                </a>
+              </div>
+              <p className="mf-contact-aside">{config.heroHighlight}</p>
             </div>
-
-            <Card className="rounded-[32px] border border-border/70 bg-slate-950 text-white shadow-[0_24px_80px_-48px_rgba(15,23,42,0.65)] ring-0">
-              <CardHeader>
-                <CardTitle className="text-white">Visão institucional</CardTitle>
-                <CardDescription className="text-slate-300">{config.heroHighlight}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {config.proofItems.map((item) => (
-                  <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100">
-                    {item}
-                  </div>
+          </div>
+        </section>
+        {config.key === 'parceiros' && <PartnerProjectSection />}
+        <section id="contato" className="mf-section mf-contact-section">
+          <div className="mf-container mf-contact-grid">
+            <div className="mf-contact-perspective">
+              <p className="mf-eyebrow">Nossa perspectiva</p>
+              <h2>{config.institutionTitle}</h2>
+              <p className="mf-contact-introduction">
+                {config.institutionDescription}
+              </p>
+              <ol className="mf-contact-principles">
+                {config.principles.map((item, i) => (
+                  <li key={item.title}>
+                    <span className="mf-card-index">0{i + 1}</span>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.description}</p>
+                    </div>
+                  </li>
                 ))}
-              </CardContent>
-            </Card>
-          </section>
-
-          <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-            <Card className="rounded-[32px] border border-border/70 bg-white/85 shadow-[0_24px_80px_-48px_rgba(15,23,42,0.35)] ring-0 backdrop-blur">
-              <CardHeader>
-                <CardTitle>{config.institutionTitle}</CardTitle>
-                <CardDescription>{config.institutionDescription}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {config.institutionPoints.map((point, index) => (
-                  <div key={point} className="rounded-[24px] border border-border bg-background/90 p-5">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">0{index + 1}</p>
-                    <p className="mt-3 text-sm leading-relaxed">{point}</p>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            <Card className="rounded-[32px] border border-border/70 bg-white/80 shadow-[0_24px_80px_-48px_rgba(15,23,42,0.28)] ring-0 backdrop-blur">
-              <CardHeader>
-                <CardTitle>{config.formTitle}</CardTitle>
-                <CardDescription>{config.formDescription}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form
-                  className="space-y-5"
-                  onSubmit={(event) => {
-                    event.preventDefault()
-                    setSubmitted(true)
-                  }}
-                >
+              </ol>
+            </div>
+            <div className="mf-contact-panel">
+              <p className="mf-eyebrow">
+                <MessageCircle size={14} strokeWidth={1.4} /> Vamos conversar
+              </p>
+              <h2>{config.formTitle}</h2>
+              <p>{config.formDescription}</p>
+              <form
+                action={'https://wa.me/' + GROUP_WHATSAPP_NUMBER}
+                method="get"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mf-contact-form"
+              >
+                <input type="hidden" name="text" value={message} />
+                <div className="mf-form-fields">
                   {config.formFields.map((field) => (
-                    <div key={field.id} className="space-y-2">
-                      <label htmlFor={field.id} className="text-sm font-medium text-foreground">
+                    <div
+                      className={
+                        field.type === 'textarea'
+                          ? 'mf-field mf-field-wide'
+                          : 'mf-field'
+                      }
+                      key={field.id}
+                    >
+                      <label htmlFor={field.id}>
                         {field.label}
-                        {field.optional ? <span className="ml-1 text-muted-foreground">(opcional)</span> : null}
+                        {field.optional && <span> (opcional)</span>}
                       </label>
-                      {renderField(field, formValues[field.id] ?? '', (nextValue) => updateField(field.id, nextValue))}
+                      <ContactField
+                        field={field}
+                        value={values[field.id] ?? ''}
+                        onChange={(value) =>
+                          setValues((current) => ({
+                            ...current,
+                            [field.id]: value,
+                          }))
+                        }
+                      />
                     </div>
                   ))}
-
-                  {submitted ? (
-                    <div className="rounded-[24px] border border-emerald-200 bg-emerald-50/80 p-4">
-                      <div className="flex items-start gap-3">
-                        <CheckCircle2 className="mt-0.5 size-5 text-emerald-700" />
-                        <p className="text-sm leading-relaxed text-emerald-950">{config.successMessage}</p>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <Button type="submit" className="h-11 rounded-full px-5">
-                    {config.submitLabel}
-                    <ArrowRight className="size-4" />
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </section>
-
-          <section>
-            <Card className="rounded-[32px] border border-border/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(241,245,249,0.88))] shadow-[0_24px_80px_-48px_rgba(15,23,42,0.28)] ring-0">
-              <CardContent className="flex flex-col gap-6 px-6 py-8 md:flex-row md:items-center md:justify-between md:px-8">
-                <div className="max-w-2xl">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Próximo passo</p>
-                  <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-                    {config.finalCtaTitle}
-                  </h2>
-                  <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">
-                    {config.finalCtaDescription}
-                  </p>
                 </div>
-                <a
-                  href={config.finalCtaHref}
-                  className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
+                <p id="whatsapp-note" className="mf-form-note">
+                  O WhatsApp abrirá em uma nova aba com sua mensagem preparada.
+                  Você revisa e confirma o envio por lá.
+                </p>
+                <button
+                  type="submit"
+                  className="mf-button"
+                  aria-describedby="whatsapp-note"
                 >
-                  {config.finalCtaLabel}
-                  <ArrowRight className="size-4" />
+                  Abrir conversa no WhatsApp <ArrowUpRight size={17} />
+                </button>
+              </form>
+              <div className="mf-direct-contact">
+                <span>Prefere falar diretamente?</span>
+                <a
+                  href={whatsappUrl(
+                    'Olá! Gostaria de conversar com o Grupo MF sobre ' +
+                      config.label.toLocaleLowerCase('pt-BR') +
+                      '.'
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {GROUP_WHATSAPP_LABEL} <ArrowUpRight size={14} />
                 </a>
-              </CardContent>
-            </Card>
-          </section>
-        </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="mf-section mf-contact-close">
+          <div className="mf-container mf-closing-grid">
+            <div>
+              <p className="mf-eyebrow">Continue explorando</p>
+              <h2>
+                {config.finalCtaTitle}
+                <br />
+                <span>{config.finalCtaAccent}</span>
+              </h2>
+              <p>{config.finalCtaDescription}</p>
+            </div>
+            <a href={config.finalCtaHref} className="mf-button">
+              {config.finalCtaLabel} <ArrowUpRight size={18} />
+            </a>
+          </div>
+        </section>
       </main>
       <SiteFooter />
     </div>

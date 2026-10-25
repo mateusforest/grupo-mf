@@ -1,10 +1,8 @@
 export type ContactPageKey = 'investidores' | 'carreiras' | 'parceiros'
-
 export interface ContactFieldOption {
   label: string
   value: string
 }
-
 export interface ContactFieldConfig {
   id: string
   label: string
@@ -13,209 +11,247 @@ export interface ContactFieldConfig {
   optional?: boolean
   options?: ContactFieldOption[]
 }
-
 export interface ContactPageConfig {
   key: ContactPageKey
-  badge: string
+  label: string
   heroTitle: string
+  heroAccent: string
   heroDescription: string
   heroHighlight: string
   institutionTitle: string
   institutionDescription: string
-  institutionPoints: string[]
-  proofTitle: string
-  proofItems: string[]
+  principles: { title: string; description: string }[]
   formTitle: string
   formDescription: string
   formFields: ContactFieldConfig[]
-  submitLabel: string
-  successMessage: string
   finalCtaTitle: string
+  finalCtaAccent: string
   finalCtaDescription: string
   finalCtaLabel: string
   finalCtaHref: string
+}
+const name: ContactFieldConfig = {
+  id: 'name',
+  label: 'Seu nome',
+  type: 'text',
+  placeholder: 'Como podemos chamar você?',
+}
+const email: ContactFieldConfig = {
+  id: 'email',
+  label: 'E-mail',
+  type: 'email',
+  placeholder: 'voce@empresa.com',
+  optional: true,
 }
 
 export const PUBLIC_CONTACT_PAGES: Record<ContactPageKey, ContactPageConfig> = {
   investidores: {
     key: 'investidores',
-    badge: 'Investor Relations',
-    heroTitle: 'Construa o próximo ciclo de empresas de software com o Grupo MF.',
+    label: 'Investidores',
+    heroTitle: 'Visão de longo prazo.',
+    heroAccent: 'Construção em conjunto.',
     heroDescription:
-      'Abrimos espaço para conversas com investidores que buscam teses de longo prazo, tecnologia aplicada e execução disciplinada.',
-    heroHighlight: 'Capital inteligente para crescimento consistente.',
-    institutionTitle: 'Como pensamos a relação com investidores',
+      'Conectamos tecnologia, produto e execução. Buscamos parceiros que compartilhem a vontade de construir empresas relevantes, com consistência e propósito.',
+    heroHighlight:
+      'Boas empresas começam com uma visão. Crescem com as conexões certas.',
+    institutionTitle: 'Mais do que capital. Uma visão em comum.',
     institutionDescription:
-      'Buscamos parceiros estratégicos com visão de ecossistema, sensibilidade operacional e interesse real em construir valor junto com os fundadores.',
-    institutionPoints: [
-      'Tese centrada em software, IA aplicada e ativos digitais com potencial de recorrência.',
-      'Ritmo de construção orientado por eficiência, clareza estratégica e validação contínua.',
-      'Estrutura preparada para futuras camadas de reporting, pipeline e acompanhamento.',
-    ],
-    proofTitle: 'O que você encontra nessa frente',
-    proofItems: [
-      'Produtos em operação e novas frentes em evolução.',
-      'Visão de ecossistema com sinergia entre software, IA e inovação aplicada.',
-      'Base pronta para futuras integrações de deal flow, materiais e acompanhamento.',
-    ],
-    formTitle: 'Inicie uma conversa com o time de investimentos',
-    formDescription:
-      'Use dados mockados por enquanto. A estrutura já deixa o formulário preparado para integração futura com CRM, backend e workflow interno.',
-    formFields: [
-      { id: 'name', label: 'Nome', type: 'text', placeholder: 'Seu nome completo' },
-      { id: 'email', label: 'E-mail', type: 'email', placeholder: 'voce@empresa.com' },
-      { id: 'firm', label: 'Fundo ou empresa', type: 'text', placeholder: 'Nome do fundo, family office ou holding' },
+      'Queremos conversar com pessoas e organizações que se interessam pelo que estamos construindo e pelo caminho que podemos percorrer juntos.',
+    principles: [
       {
-        id: 'ticket',
-        label: 'Faixa de interesse',
+        title: 'Tecnologia aplicada',
+        description:
+          'Produtos de software, inteligência artificial e experiências digitais que partem de problemas reais.',
+      },
+      {
+        title: 'Construção consistente',
+        description:
+          'Pesquisa, validação e desenvolvimento como partes do mesmo processo.',
+      },
+      {
+        title: 'Relações de longo prazo',
+        description:
+          'Proximidade, clareza e complementaridade para pensar os próximos passos do grupo.',
+      },
+    ],
+    formTitle: 'Vamos iniciar uma conversa.',
+    formDescription: 'Conte um pouco sobre você e seu interesse no Grupo MF.',
+    formFields: [
+      name,
+      email,
+      {
+        id: 'firm',
+        label: 'Empresa ou fundo',
+        type: 'text',
+        placeholder: 'Onde você atua?',
+        optional: true,
+      },
+      {
+        id: 'interest',
+        label: 'Seu interesse',
         type: 'select',
-        placeholder: 'Selecione',
+        placeholder: 'Selecione uma opção',
         options: [
-          { label: 'Até R$ 500 mil', value: 'ate-500k' },
-          { label: 'R$ 500 mil a R$ 2 milhões', value: '500k-2m' },
-          { label: 'Acima de R$ 2 milhões', value: 'acima-2m' },
+          { label: 'Conhecer o grupo', value: 'conhecer' },
+          { label: 'Conversar sobre investimento', value: 'investimento' },
+          { label: 'Explorar uma conexão estratégica', value: 'estrategia' },
         ],
       },
       {
-        id: 'thesis',
-        label: 'Tese ou foco estratégico',
+        id: 'message',
+        label: 'O que podemos construir juntos?',
         type: 'textarea',
-        placeholder: 'Conte como você investe, quais mercados busca e o que considera um bom encaixe.',
+        placeholder: 'Compartilhe sua visão, seus interesses ou uma pergunta.',
       },
     ],
-    submitLabel: 'Enviar interesse',
-    successMessage:
-      'Interesse registrado com sucesso. Nosso time poderá retornar quando essa frente evoluir para backend.',
-    finalCtaTitle: 'Vamos explorar uma tese em comum?',
+    finalCtaTitle: 'Conheça o que',
+    finalCtaAccent: 'estamos construindo.',
     finalCtaDescription:
-      'Se sua visão combina capital, tecnologia e construção de longo prazo, esse é um bom ponto de partida.',
-    finalCtaLabel: 'Acessar Control Center',
-    finalCtaHref: '/login',
+      'Diferentes produtos. Uma mesma vontade de transformar problemas em possibilidades.',
+    finalCtaLabel: 'Explore nossos produtos',
+    finalCtaHref: '/#produtos',
   },
   carreiras: {
     key: 'carreiras',
-    badge: 'Careers',
-    heroTitle: 'Venha construir produtos ambiciosos em um time pequeno e extremamente focado.',
+    label: 'Carreiras',
+    heroTitle: 'Gente curiosa.',
+    heroAccent: 'Ideias que ganham forma.',
     heroDescription:
-      'Estamos interessados em pessoas que gostem de criar, aprender rápido e transformar complexidade em experiências simples.',
-    heroHighlight: 'Tecnologia, autonomia e impacto real.',
-    institutionTitle: 'Como pensamos carreira no Grupo MF',
+      'Gostamos de quem faz perguntas, aprende no caminho e transforma complexidade em experiências simples. Se esse é o seu jeito de trabalhar, queremos conhecer você.',
+    heroHighlight: 'O próximo produto começa com pessoas que gostam de criar.',
+    institutionTitle: 'Espaço para pensar. Autonomia para fazer.',
     institutionDescription:
-      'Preferimos times compactos, densidade técnica e pessoas que queiram participar da construção de algo relevante desde cedo.',
-    institutionPoints: [
-      'Ambiente com proximidade entre estratégia, produto e execução.',
-      'Espaço para protagonismo, responsabilidade e evolução acelerada.',
-      'Estrutura já pronta para futuras integrações com vagas, processos seletivos e acompanhamento.',
+      'Construímos com proximidade entre estratégia, design e tecnologia. Conhecer pessoas é o primeiro passo para novas oportunidades.',
+    principles: [
+      {
+        title: 'Curiosidade',
+        description:
+          'Entender o problema, experimentar possibilidades e continuar aprendendo.',
+      },
+      {
+        title: 'Responsabilidade',
+        description:
+          'Ter iniciativa, cuidar dos detalhes e acompanhar o impacto do próprio trabalho.',
+      },
+      {
+        title: 'Colaboração',
+        description:
+          'Compartilhar contexto, ouvir outras perspectivas e construir em conjunto.',
+      },
     ],
-    proofTitle: 'O que valorizamos',
-    proofItems: [
-      'Clareza de pensamento, velocidade de aprendizado e senso de dono.',
-      'Capacidade de transformar problemas difusos em entregas concretas.',
-      'Interesse genuíno por software, IA, negócios e excelência operacional.',
-    ],
-    formTitle: 'Mostre seu perfil',
+    formTitle: 'Mostre o que move você.',
     formDescription:
-      'Por enquanto, o formulário usa dados mockados. A estrutura já está pronta para conectar recrutamento, ATS e fluxos internos depois.',
+      'Apresente seu perfil e os tipos de problema que você gosta de resolver.',
     formFields: [
-      { id: 'name', label: 'Nome', type: 'text', placeholder: 'Seu nome completo' },
-      { id: 'email', label: 'E-mail', type: 'email', placeholder: 'voce@email.com' },
+      name,
+      email,
       {
         id: 'area',
         label: 'Área de interesse',
         type: 'select',
-        placeholder: 'Selecione',
+        placeholder: 'Selecione uma área',
         options: [
           { label: 'Produto', value: 'produto' },
           { label: 'Engenharia', value: 'engenharia' },
           { label: 'Design', value: 'design' },
           { label: 'Operações', value: 'operacoes' },
           { label: 'Comercial', value: 'comercial' },
+          { label: 'Outra área', value: 'outra' },
         ],
       },
-      { id: 'portfolio', label: 'LinkedIn ou portfólio', type: 'url', placeholder: 'https://linkedin.com/in/seu-perfil' },
       {
-        id: 'stage',
-        label: 'Momento de carreira',
-        type: 'select',
-        placeholder: 'Selecione',
-        options: [
-          { label: 'Júnior', value: 'junior' },
-          { label: 'Pleno', value: 'pleno' },
-          { label: 'Sênior', value: 'senior' },
-          { label: 'Liderança', value: 'lideranca' },
-        ],
+        id: 'portfolio',
+        label: 'LinkedIn ou portfólio',
+        type: 'url',
+        placeholder: 'https://',
+        optional: true,
       },
       {
         id: 'message',
-        label: 'Por que o Grupo MF?',
+        label: 'Conte um pouco sobre você',
         type: 'textarea',
-        placeholder: 'Conte o que te atrai, o tipo de problema que gosta de resolver e como quer contribuir.',
+        placeholder: 'O que você gosta de criar? Como gostaria de contribuir?',
       },
     ],
-    submitLabel: 'Enviar perfil',
-    successMessage:
-      'Perfil registrado com sucesso. Quando essa frente estiver integrada ao backend, o time poderá avançar o contato.',
-    finalCtaTitle: 'Quer construir produtos com mais intensidade?',
+    finalCtaTitle: 'Conheça nosso',
+    finalCtaAccent: 'jeito de criar.',
     finalCtaDescription:
-      'Se você gosta de contexto, responsabilidade e impacto, esse é um ótimo lugar para iniciar a conversa.',
-    finalCtaLabel: 'Conhecer o MF Labs',
-    finalCtaHref: '/mf-labs',
+      'Do problema à ideia. Da ideia ao produto. Descubra como pensamos a inovação no MF Labs.',
+    finalCtaLabel: 'Explore o MF Labs',
+    finalCtaHref: '/#mf-labs',
   },
   parceiros: {
     key: 'parceiros',
-    badge: 'Partnerships',
-    heroTitle: 'Parcerias certas aceleram execução, ampliam alcance e criam novas possibilidades.',
+    label: 'Parceiros',
+    heroTitle: 'Competências que se somam.',
+    heroAccent: 'Possibilidades que crescem.',
     heroDescription:
-      'Estamos abertos a conexões com empresas, especialistas e operadores que possam fortalecer produtos, distribuição ou novas iniciativas.',
-    heroHighlight: 'Colaboração estratégica para gerar resultados concretos.',
-    institutionTitle: 'Como enxergamos parcerias',
+      'Conectamos nossa experiência em design, tecnologia e produtos a empresas e pessoas com quem podemos construir algo relevante.',
+    heroHighlight: 'Uma boa parceria começa com um objetivo em comum.',
+    institutionTitle: 'Boas conexões se tornam bons projetos.',
     institutionDescription:
-      'Gostamos de parcerias com clareza de objetivo, complementaridade real e capacidade de execução conjunta.',
-    institutionPoints: [
-      'Parcerias de produto, tecnologia, distribuição e operação.',
-      'Modelos desenhados para gerar valor bilateral e evolução contínua.',
-      'Estrutura pronta para futuras integrações com CRM, pipeline e histórico de relacionamento.',
+      'Acreditamos em colaborações com propósito claro, competências complementares e participação próxima ao longo do caminho.',
+    principles: [
+      {
+        title: 'Design e identidade',
+        description:
+          'Marcas e experiências que comunicam com clareza o que cada negócio tem de especial.',
+      },
+      {
+        title: 'Produto e tecnologia',
+        description:
+          'Sites, sistemas e experiências digitais pensados a partir de necessidades reais.',
+      },
+      {
+        title: 'Operação e evolução',
+        description:
+          'Uma visão que conecta a presença digital à forma como o negócio funciona.',
+      },
     ],
-    proofTitle: 'Onde costumamos enxergar sinergia',
-    proofItems: [
-      'Distribuição e aquisição de clientes para produtos do ecossistema.',
-      'Integrações tecnológicas e alianças operacionais.',
-      'Canais, especialistas e empresas com visão de longo prazo.',
-    ],
-    formTitle: 'Apresente sua proposta de parceria',
+    formTitle: 'Sua próxima parceria começa aqui.',
     formDescription:
-      'A captura é mockada por enquanto, mas a estrutura já está pronta para evoluir para backend, CRM e workflows internos.',
+      'Compartilhe o contexto da sua empresa e a ideia que gostaria de explorar.',
     formFields: [
-      { id: 'name', label: 'Nome', type: 'text', placeholder: 'Seu nome completo' },
-      { id: 'email', label: 'E-mail', type: 'email', placeholder: 'voce@empresa.com' },
-      { id: 'company', label: 'Empresa', type: 'text', placeholder: 'Nome da empresa ou operação' },
+      name,
+      email,
+      {
+        id: 'company',
+        label: 'Empresa',
+        type: 'text',
+        placeholder: 'Nome da sua empresa',
+        optional: true,
+      },
       {
         id: 'partnershipType',
-        label: 'Tipo de parceria',
+        label: 'O que você busca?',
         type: 'select',
-        placeholder: 'Selecione',
+        placeholder: 'Selecione uma opção',
         options: [
-          { label: 'Tecnologia', value: 'tecnologia' },
-          { label: 'Distribuição', value: 'distribuicao' },
-          { label: 'Operação', value: 'operacao' },
-          { label: 'Co-branding', value: 'co-branding' },
+          { label: 'Design e identidade', value: 'design' },
+          { label: 'Produto e tecnologia', value: 'tecnologia' },
+          { label: 'Operação digital', value: 'operacao' },
+          { label: 'Outra colaboração', value: 'outra' },
         ],
       },
-      { id: 'website', label: 'Site ou material público', type: 'url', placeholder: 'https://suaempresa.com' },
+      {
+        id: 'website',
+        label: 'Site da empresa',
+        type: 'url',
+        placeholder: 'https://',
+        optional: true,
+      },
       {
         id: 'message',
-        label: 'Contexto da parceria',
+        label: 'Conte sua ideia',
         type: 'textarea',
-        placeholder: 'Explique a proposta, os ganhos esperados e por que existe encaixe com o Grupo MF.',
+        placeholder: 'Qual desafio podemos explorar juntos?',
       },
     ],
-    submitLabel: 'Enviar proposta',
-    successMessage:
-      'Proposta registrada com sucesso. A base está pronta para futuras integrações de relacionamento e triagem.',
-    finalCtaTitle: 'Existe uma frente que podemos construir juntos?',
+    finalCtaTitle: 'Uma parceria.',
+    finalCtaAccent: 'Uma nova perspectiva.',
     finalCtaDescription:
-      'Se sua proposta conecta tecnologia, distribuição ou operação com alto potencial de alavancagem, vale iniciar a conversa.',
-    finalCtaLabel: 'Voltar para a landing',
-    finalCtaHref: '/',
+      'Conheça nossa colaboração na identidade, tecnologia e operação digital da EME Select.',
+    finalCtaLabel: 'Conheça o projeto EME Select',
+    finalCtaHref: '/projetos/eme-select',
   },
 }

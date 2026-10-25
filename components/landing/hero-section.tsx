@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import { products } from './products-data'
+import { productHref } from '@/lib/public-products'
 
 export function HeroSection() {
   return (
@@ -41,14 +42,12 @@ export function HeroSection() {
             Nosso ecossistema <ArrowDown size={14} />
           </a>
           <div className="mf-strip-brands">
-            {products
-              .filter((product) => product.id !== 'more')
-              .map((product) => (
-                <a href={'#produto-' + product.id} key={product.id}>
-                  {product.icon}
-                  <span>{product.name}</span>
-                </a>
-              ))}
+            {products.map((product) => (
+              <a href={productHref(product.id)} key={product.id}>
+                {product.icon}
+                <span>{product.name}</span>
+              </a>
+            ))}
           </div>
         </div>
       </div>

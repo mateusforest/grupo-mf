@@ -9,6 +9,7 @@ const PUBLIC_ROUTES = new Set([
   '/investidores',
   '/carreiras',
   '/parceiros',
+  '/projetos/eme-select',
 ])
 
 function buildLoginUrl(request: NextRequest) {
@@ -26,7 +27,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const config = getSupabasePublicConfig()
   const accessToken = request.cookies.get(MF_AUTH_ACCESS_COOKIE)?.value
-  const isPublicRoute = PUBLIC_ROUTES.has(pathname)
+  const isPublicRoute = PUBLIC_ROUTES.has(pathname) || /^\/ecossistema\/[^/]+$/.test(pathname)
 
   if (!config) {
     return pathname === '/login' || isPublicRoute

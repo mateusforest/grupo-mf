@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
 import { products } from './products-data'
+import { productHref } from '@/lib/public-products'
 
 const columns = [
   {
@@ -17,13 +18,12 @@ const columns = [
       { label: 'Investidores', href: '/investidores' },
       { label: 'Carreiras', href: '/carreiras' },
       { label: 'Parceiros', href: '/parceiros' },
+      { label: 'Projeto EME Select', href: '/projetos/eme-select' },
     ],
   },
   {
     title: 'Ecossistema',
-    links: products
-      .filter((p) => p.id !== 'more')
-      .map((p) => ({ label: p.name, href: '/#produto-' + p.id })),
+    links: products.map((p) => ({ label: p.name, href: productHref(p.id) })),
   },
 ]
 

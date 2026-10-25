@@ -1,13 +1,6 @@
 import { ArrowUpRight } from 'lucide-react'
+import { productHref } from '@/lib/public-products'
 import { products } from './products-data'
-
-const categories: Record<string, string> = {
-  cos: 'Inteligência operacional',
-  travelpro: 'Gestão de turismo',
-  travelmatch: 'Conexões inteligentes',
-  vuei: 'Experiência de viagem',
-  eme: 'Tecnologia imobiliária',
-}
 
 export function ProductsSection() {
   return (
@@ -27,54 +20,39 @@ export function ProductsSection() {
             </h2>
           </div>
           <p className="mf-section-intro">
-            Software, inteligência artificial e design para simplificar o
-            presente e construir o que vem depois.
+            Software, inteligência artificial e experiências digitais. Produtos
+            criados pelo Grupo MF para abrir novos caminhos.
           </p>
         </div>
         <div className="mf-product-grid">
-          {products.map((product, index) =>
-            product.id === 'more' ? (
-              <a
-                key={product.id}
-                href="/mf-labs"
-                className="mf-product-card mf-next-product"
-              >
-                <div className="mf-card-top">
-                  <span className="mf-eyebrow">Em construção</span>
-                  <ArrowUpRight size={21} strokeWidth={1.4} />
-                </div>
-                <div>
-                  <span className="mf-next-symbol">+</span>
-                  <h3>O próximo capítulo.</h3>
-                  <p>
-                    Novas ideias ganham forma no MF Labs. A sua pode ser uma
-                    delas.
-                  </p>
-                </div>
-                <span className="mf-card-category">
-                  Conheça nosso laboratório <ArrowUpRight size={15} />
-                </span>
-              </a>
-            ) : (
-              <article
-                id={'produto-' + product.id}
-                key={product.id}
-                className="mf-product-card"
-              >
-                <div className="mf-card-top">
-                  {product.icon}
-                  <span className="mf-card-index">0{index + 1}</span>
-                </div>
-                <div>
-                  <h3>{product.name}</h3>
-                  <p>{product.description}</p>
-                </div>
-                <span className="mf-card-category">
-                  {categories[product.id]}
-                </span>
-              </article>
-            )
-          )}
+          {products.map((product, index) => (
+            <a
+              id={'produto-' + product.id}
+              href={productHref(product.id)}
+              key={product.id}
+              className="mf-product-card"
+              aria-label={'Conheça o ' + product.name}
+            >
+              <div className="mf-card-top">
+                {product.icon}
+                <span className="mf-card-index">0{index + 1}</span>
+              </div>
+              <div>
+                <h3>{product.name}</h3>
+                <p>{product.description}</p>
+              </div>
+              <span className="mf-card-category">
+                {product.category}
+                <ArrowUpRight size={16} />
+              </span>
+            </a>
+          ))}
+        </div>
+        <div className="mf-next-line">
+          <p>O próximo capítulo começa com uma boa ideia.</p>
+          <a href="/mf-labs" className="mf-text-link">
+            Explore o MF Labs <ArrowUpRight size={16} />
+          </a>
         </div>
       </div>
     </section>

@@ -6,6 +6,7 @@ import { JoinSection } from '@/components/landing/join-section'
 import { LabsSection } from '@/components/landing/labs-section'
 import { OverviewPageClient } from '@/components/overview-page-client'
 import { ProductsSection } from '@/components/landing/products-section'
+import { PartnerProjectSection } from '@/components/landing/partner-project-section'
 import { Sidebar } from '@/components/sidebar'
 import { SiteFooter } from '@/components/landing/site-footer'
 import { SiteHeader } from '@/components/landing/site-header'
@@ -38,6 +39,7 @@ export default async function HomePage() {
       <main id="conteudo">
         <HeroSection />
         <ProductsSection />
+        <PartnerProjectSection />
         <LabsSection />
         <EcosystemSection />
         <FounderSection />

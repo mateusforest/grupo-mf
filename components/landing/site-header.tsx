@@ -10,6 +10,7 @@ const navLinks = [
   { label: 'O grupo', href: '/#sobre' },
   { label: 'Investidores', href: '/investidores' },
   { label: 'Carreiras', href: '/carreiras' },
+  { label: 'Parceiros', href: '/parceiros' },
 ]
 
 export function SiteHeader() {

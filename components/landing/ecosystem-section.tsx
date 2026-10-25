@@ -1,7 +1,7 @@
 import { products } from './products-data'
 
 export function EcosystemSection() {
-  const count = products.filter((product) => product.id !== 'more').length
+  const count = products.length
   return (
     <section
       id="ecossistema"
