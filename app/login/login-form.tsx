@@ -2,149 +2,188 @@
 
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { type FormEvent, useState } from 'react'
-import { Lock, Mail } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { type FormEvent, useRef, useState } from 'react'
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Eye,
+  EyeOff,
+  LoaderCircle,
+} from 'lucide-react'
+import styles from './login.module.css'
+
+function loginDestination(value: string | undefined) {
+  try {
+    const destination = new URL(value || '/', window.location.origin)
+    return destination.origin === window.location.origin
+      ? destination.pathname + destination.search + destination.hash
+      : '/'
+  } catch {
+    return '/'
+  }
+}
 
 export function LoginForm({ redirectTo }: { redirectTo?: string }) {
   const router = useRouter()
+  const submitting = useRef(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (submitting.current) return
+    submitting.current = true
     setLoading(true)
     setError(null)
 
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       })
-
       const payload = await response.json().catch(() => null)
-
-      if (!response.ok) {
-        setError(payload?.error?.message ?? 'Não foi possível entrar.')
+      if (!response.ok || !payload?.ok) {
+        setError(
+          payload?.error?.message ?? 'Não foi possível entrar. Tente novamente.'
+        )
         return
       }
-
-      router.push(redirectTo && redirectTo.startsWith('/') ? redirectTo : '/')
+      router.replace(loginDestination(redirectTo))
       router.refresh()
+    } catch {
+      setError(
+        'Não foi possível conectar. Confira sua conexão e tente novamente.'
+      )
     } finally {
+      submitting.current = false
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6 py-10">
-        <div className="grid w-full gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="hidden flex-col justify-between rounded-[28px] border border-border bg-card/50 p-8 lg:flex">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/grupo-mf-logo.png"
-                alt="Grupo MF"
-                width={40}
-                height={40}
-                className="size-10 object-contain"
-              />
-              <div>
-                <p className="text-sm font-medium tracking-tight">Grupo MF</p>
-                <p className="text-sm text-muted-foreground">MF Control Center</p>
-              </div>
-            </div>
+    <div className={'mf-public ' + styles.page}>
+      <header className={styles.header}>
+        <a href="/" className="mf-brand" aria-label="Grupo MF — início">
+          <Image src="/mf-logo.png" alt="" width={38} height={38} priority />
+          <span>
+            grupo mf<span className="mf-brand-dot">.</span>
+          </span>
+        </a>
+        <a href="/" className={styles.back}>
+          <ArrowLeft size={15} aria-hidden="true" /> Voltar ao site
+        </a>
+      </header>
 
-            <div className="space-y-4">
-              <p className="max-w-xl text-4xl font-semibold tracking-tight text-foreground">
-                Controle executivo do ecossistema do Grupo MF.
-              </p>
-              <p className="max-w-lg text-base text-muted-foreground">
-                Receita, operação, consumo de IA e saúde dos produtos em uma única central interna.
-              </p>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-border bg-background/80 p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Receita</p>
-                <p className="mt-2 text-lg font-medium">Visão consolidada</p>
-              </div>
-              <div className="rounded-2xl border border-border bg-background/80 p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">IA</p>
-                <p className="mt-2 text-lg font-medium">Uso e custo</p>
-              </div>
-              <div className="rounded-2xl border border-border bg-background/80 p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Operação</p>
-                <p className="mt-2 text-lg font-medium">Alertas e status</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center">
-            <Card className="w-full max-w-md border border-border bg-card/80 py-0">
-              <CardHeader className="border-b border-border px-6 py-6">
-                <CardTitle className="text-2xl font-semibold tracking-tight">Entrar</CardTitle>
-                <CardDescription>
-                  Acesse o MF Control Center com seu e-mail e senha.
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="px-6 py-6">
-                <form className="space-y-4" onSubmit={handleSubmit}>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium" htmlFor="email">
-                      E-mail
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        placeholder="voce@grupomf.com"
-                        className="h-10 pl-9"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium" htmlFor="password">
-                      Senha
-                    </label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        placeholder="Sua senha"
-                        className="h-10 pl-9"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  {error ? <p className="text-sm text-destructive">{error}</p> : null}
-
-                  <Button type="submit" className="h-10 w-full" disabled={loading}>
-                    {loading ? 'Entrando...' : 'Entrar'}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+      <main id="conteudo" className={styles.main}>
+        <div className={styles.introduction}>
+          <p className="mf-eyebrow">Grupo MF / Gestão do ecossistema</p>
+          <h1>
+            Control <br />
+            <span>Center.</span>
+          </h1>
+          <p className={styles.description}>
+            Produtos, operação e resultados.
+            <br />
+            Uma visão integrada do Grupo MF.
+          </p>
+          <div className={styles.signature}>
+            Clareza para decidir. Espaço para crescer.
           </div>
         </div>
-      </div>
+
+        <section className={styles.panel} aria-labelledby="login-title">
+          <p className="mf-eyebrow">Seu espaço de trabalho</p>
+          <h2 id="login-title">Entre na sua conta.</h2>
+          <p className={styles.hint}>Use seu e-mail e senha para continuar.</p>
+          <form
+            onSubmit={handleSubmit}
+            className={styles.form}
+            aria-busy={loading}
+            aria-describedby={error ? 'login-error' : undefined}
+          >
+            <div className={styles.field}>
+              <label htmlFor="email">E-mail</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="username"
+                inputMode="email"
+                autoCapitalize="none"
+                spellCheck={false}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="Seu e-mail"
+                required
+                readOnly={loading}
+              />
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="password">Senha</label>
+              <div className={styles.password}>
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="Sua senha"
+                  required
+                  readOnly={loading}
+                />
+                <button
+                  type="button"
+                  className={styles.reveal}
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  aria-pressed={showPassword}
+                  aria-controls="password"
+                >
+                  {showPassword ? (
+                    <EyeOff size={19} strokeWidth={1.5} aria-hidden="true" />
+                  ) : (
+                    <Eye size={19} strokeWidth={1.5} aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+            </div>
+            {error && (
+              <p id="login-error" className={styles.error} role="alert">
+                {error}
+              </p>
+            )}
+            <button
+              type="submit"
+              className={'mf-button ' + styles.submit}
+              disabled={loading}
+            >
+              <span>{loading ? 'Entrando…' : 'Entrar no Control Center'}</span>
+              {loading ? (
+                <LoaderCircle
+                  className={styles.spinner}
+                  size={18}
+                  aria-hidden="true"
+                />
+              ) : (
+                <ArrowUpRight size={18} aria-hidden="true" />
+              )}
+            </button>
+          </form>
+          <p className={styles.accessNote}>
+            Acesso exclusivo a pessoas autorizadas pelo Grupo MF.
+          </p>
+        </section>
+      </main>
+
+      <footer className={styles.footer}>
+        <span>Grupo MF</span>
+        <span>Tecnologia. Inovação. Novos caminhos.</span>
+      </footer>
     </div>
   )
 }
