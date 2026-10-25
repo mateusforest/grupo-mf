@@ -81,9 +81,9 @@ export function ContactDestinationPage({ config }: { config: ContactPageConfig }
   }
 
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground">
+    <div className="mf-public min-h-screen font-sans">
       <SiteHeader />
-      <main className="relative overflow-hidden">
+      <main id="conteudo" className="relative overflow-hidden">
         <div className="absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.14),transparent_58%)]" />
         <div className="absolute right-0 top-12 -z-10 h-72 w-72 rounded-full bg-blue-100/50 blur-3xl" />
         <div className="absolute left-0 top-48 -z-10 h-64 w-64 rounded-full bg-slate-200/60 blur-3xl" />

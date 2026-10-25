@@ -140,7 +140,7 @@ export function MfLabsSubmissionFlow() {
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1)
   const [draft, setDraft] = useState<ProjectSubmissionDraft>(initialDraft)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [analysisProgress, setAnalysisProgress] = useState(progressFrames[0])
+  const [analysisProgress, setAnalysisProgress] = useState<(typeof progressFrames)[number]>(progressFrames[0])
   const [analysisIndex, setAnalysisIndex] = useState(0)
   const [analysisComplete, setAnalysisComplete] = useState(false)
   const [projectReference, setProjectReference] = useState('')
@@ -156,7 +156,7 @@ export function MfLabsSubmissionFlow() {
 
     const interval = window.setInterval(() => {
       setAnalysisProgress((current) => {
-        const currentIndex = progressFrames.indexOf(current as (typeof progressFrames)[number])
+        const currentIndex = progressFrames.indexOf(current)
         const nextIndex = Math.min(currentIndex + 1, progressFrames.length - 1)
 
         if (nextIndex !== currentIndex) {
@@ -653,7 +653,7 @@ export function MfLabsSubmissionFlow() {
                   <div className="mt-5">
                     <Progress value={analysisProgress} className="gap-2">
                       <ProgressLabel>Esteira de avaliação</ProgressLabel>
-                      <ProgressValue>{analysisProgress}%</ProgressValue>
+                      <ProgressValue />
                     </Progress>
                   </div>
 

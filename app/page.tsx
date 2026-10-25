@@ -33,14 +33,14 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground">
+    <div className="mf-public min-h-screen font-sans">
       <SiteHeader />
-      <main>
+      <main id="conteudo">
         <HeroSection />
         <ProductsSection />
         <LabsSection />
-        <FounderSection />
         <EcosystemSection />
+        <FounderSection />
         <SubmitProjectSection />
         <JoinSection />
       </main>

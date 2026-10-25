@@ -1,42 +1,81 @@
-import Image from "next/image"
-import { ArrowRight } from "lucide-react"
+'use client'
+
+import Image from 'next/image'
+import { useRef, useState } from 'react'
+import { ArrowUpRight, Menu, X } from 'lucide-react'
 
 const navLinks = [
-  { label: "Produtos", href: "#produtos" },
-  { label: "MF Labs", href: "#mf-labs" },
-  { label: "Sobre", href: "#sobre" },
-  { label: "Se torne um investidor", href: "/investidores" },
-  { label: "Carreiras", href: "/carreiras" },
+  { label: 'Produtos', href: '/#produtos' },
+  { label: 'MF Labs', href: '/#mf-labs' },
+  { label: 'O grupo', href: '/#sobre' },
+  { label: 'Investidores', href: '/investidores' },
+  { label: 'Carreiras', href: '/carreiras' },
 ]
 
 export function SiteHeader() {
+  const [open, setOpen] = useState(false)
+  const toggle = useRef<HTMLButtonElement>(null)
+  function closeMenu() {
+    setOpen(false)
+    toggle.current?.focus()
+  }
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:px-8">
-        <a href="/" className="flex items-center">
-          <Image src="/mf-logo.png" alt="Grupo MF" width={32} height={32} className="size-8 object-contain" />
+    <header
+      className="mf-site-header"
+      onKeyDown={(event) => {
+        if (event.key === 'Escape' && open) closeMenu()
+      }}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+          setOpen(false)
+      }}
+    >
+      <a className="mf-skip-link" href="#conteudo">
+        Ir para o conteúdo
+      </a>
+      <div className="mf-container mf-header-inner">
+        <a href="/" className="mf-brand" aria-label="Grupo MF — início">
+          <Image src="/mf-logo.png" alt="" width={38} height={38} />
+          <span>
+            grupo mf<span className="mf-brand-dot">.</span>
+          </span>
         </a>
-
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="mf-desktop-nav" aria-label="Navegação principal">
           {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
+            <a key={link.label} href={link.href}>
               {link.label}
             </a>
           ))}
         </nav>
-
-        <a
-          href="/login"
-          className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
-        >
-          Acessar Control Center
-          <ArrowRight className="size-4" />
-        </a>
+        <div className="mf-header-actions">
+          <a href="/login" className="mf-control-link">
+            Control Center <ArrowUpRight size={15} />
+          </a>
+          <button
+            ref={toggle}
+            className="mf-menu-toggle"
+            aria-label={open ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={open}
+            aria-controls="mf-mobile-nav"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
+      <nav
+        id="mf-mobile-nav"
+        className="mf-mobile-nav"
+        aria-label="Navegação móvel"
+        hidden={!open}
+      >
+        {navLinks.map((link) => (
+          <a key={link.label} href={link.href} onClick={() => setOpen(false)}>
+            {link.label}
+            <ArrowUpRight size={17} />
+          </a>
+        ))}
+      </nav>
     </header>
   )
 }

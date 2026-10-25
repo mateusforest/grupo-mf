@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import './globals.css'
+import './institutional.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const geistMono = Geist_Mono({
@@ -13,7 +14,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Grupo MF',
   description:
-    'Construindo a próxima geração de empresas de tecnologia, IA e inovação.',
+    'Criamos tecnologia e abrimos novos caminhos. Conheça os produtos, sistemas inteligentes e iniciativas de inovação do Grupo MF.',
   generator: 'v0.app',
   icons: {
     icon: [{ url: '/mf-logo.png', type: 'image/png' }],

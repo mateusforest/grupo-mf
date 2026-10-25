@@ -1,60 +1,53 @@
-import { Users, User, Handshake, ArrowRight } from "lucide-react"
+import { ArrowUpRight } from 'lucide-react'
 
-const cards = [
+const opportunities = [
   {
-    icon: Users,
-    title: "Investidores",
-    description: "Parcerias estratégicas para construir empresas de software de longo prazo e alto impacto.",
-    cta: "Quero conversar",
-    href: "/investidores",
+    title: 'Investidores',
+    description: 'Visão de longo prazo para construir novas empresas.',
+    href: '/investidores',
   },
   {
-    icon: User,
-    title: "Colaboradores",
-    description: "Estamos formando um time pequeno, ambicioso e apaixonado por tecnologia.",
-    cta: "Trabalhe no Grupo MF",
-    href: "/carreiras",
+    title: 'Talentos',
+    description: 'Gente curiosa, que gosta de pensar e fazer acontecer.',
+    href: '/carreiras',
   },
   {
-    icon: Handshake,
-    title: "Parceiros",
-    description: "Juntos vamos mais longe. Vamos transformar ideias em soluções reais para o mundo.",
-    cta: "Seja um parceiro",
-    href: "/parceiros",
+    title: 'Parceiros',
+    description: 'Competências que se somam. Possibilidades que se ampliam.',
+    href: '/parceiros',
   },
 ]
 
 export function JoinSection() {
   return (
-    <section id="investidores" className="border-t border-border/60 bg-muted/30 py-20 md:py-24">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Faça parte do Grupo MF
-          </p>
-          <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-            Construa o futuro conosco.
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-pretty leading-relaxed text-muted-foreground">
-            Buscamos pessoas, parceiros e investidores que acreditam no poder da tecnologia para transformar mercados e
-            gerar impacto real.
+    <section
+      id="investidores"
+      className="mf-section mf-join"
+      aria-labelledby="join-title"
+    >
+      <div className="mf-container">
+        <div className="mf-section-heading">
+          <div>
+            <p className="mf-eyebrow">04 / Vamos construir juntos</p>
+            <h2 id="join-title">
+              O próximo passo
+              <br />
+              <span>pode ser com você.</span>
+            </h2>
+          </div>
+          <p className="mf-section-intro">
+            Conectamos pessoas que compartilham a vontade de transformar boas
+            ideias em algo relevante.
           </p>
         </div>
-
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {cards.map((card) => (
-            <article key={card.title} className="rounded-2xl border border-border bg-card p-7">
-              <card.icon className="size-6 text-foreground" strokeWidth={1.8} />
-              <h3 className="mt-5 text-lg font-semibold tracking-tight">{card.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.description}</p>
-              <a
-                href={card.href}
-                className="mt-5 inline-flex items-center gap-2 text-sm font-medium transition-colors hover:text-muted-foreground"
-              >
-                {card.cta}
-                <ArrowRight className="size-4" />
-              </a>
-            </article>
+        <div className="mf-opportunities">
+          {opportunities.map((item, i) => (
+            <a href={item.href} key={item.title}>
+              <span className="mf-card-index">0{i + 1}</span>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+              <ArrowUpRight size={24} strokeWidth={1.25} />
+            </a>
           ))}
         </div>
       </div>

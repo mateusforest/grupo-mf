@@ -39,10 +39,12 @@ export async function getDashboardAlerts(): Promise<MFControlAlertRecord[]> {
     .from('mf_alerts')
     .select('id, type, title, description, severity, status, created_at, resolved_at, product:mf_products(name)')
     .order('created_at', { ascending: false })
+    // product_id is a nullable foreign key to one product, not a collection.
+    .overrideTypes<AlertRow[], { merge: false }>()
 
   if (error) throw error
 
-  const rows = (data ?? []) as AlertRow[]
+  const rows = data ?? []
 
   return rows.map((row) => ({
     id: row.id,

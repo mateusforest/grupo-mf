@@ -17,9 +17,11 @@ interface HealthRow {
   checked_at: string
 }
 
+type ServiceHealthStatus = 'online' | 'unstable' | 'offline'
+
 export interface MonitoringServiceStatus {
   service: string
-  status: string | null
+  status: ServiceHealthStatus | null
   latencyMs: number | null
   message: string | null
   checkedAt: string | null
@@ -45,7 +47,7 @@ export interface MonitoringDashboardData {
 
 const DEFAULT_SERVICES = ['api', 'database', 'auth', 'storage', 'stripe', 'openai']
 
-function normalizeStatus(status: string | null | undefined): 'online' | 'unstable' | 'offline' | null {
+function normalizeStatus(status: string | null | undefined): ServiceHealthStatus | null {
   if (!status) return null
   if (status === 'online') return 'online'
   if (status === 'unstable') return 'unstable'
@@ -163,7 +165,7 @@ export async function getMonitoringDashboardData(): Promise<MonitoringDashboardD
 
       return {
         service,
-        status: latest?.status ?? null,
+        status: normalizeStatus(latest?.status),
         latencyMs: latest?.latency_ms ?? null,
         message: latest?.message ?? null,
         checkedAt: latest?.checked_at ?? null,

@@ -4,9 +4,9 @@ import { MfLabsSubmissionFlow } from '@/components/mf-labs/submission-flow'
 
 export default function MfLabsPage() {
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground">
+    <div className="mf-public min-h-screen font-sans">
       <SiteHeader />
-      <main>
+      <main id="conteudo">
         <MfLabsSubmissionFlow />
       </main>
       <SiteFooter />

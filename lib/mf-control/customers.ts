@@ -49,10 +49,12 @@ export async function getDashboardCustomers(): Promise<{
     .from('mf_customers')
     .select('id, name, email, plan, status, created_at, mrr, product:mf_products(id, name)')
     .order('created_at', { ascending: false })
+    // product_id references one product; the client has no generated schema types.
+    .overrideTypes<CustomerRow[], { merge: false }>()
 
   if (error) throw error
 
-  const rows = (data ?? []) as CustomerRow[]
+  const rows = data ?? []
 
   const customers = rows.map((row) => ({
     id: row.id,
