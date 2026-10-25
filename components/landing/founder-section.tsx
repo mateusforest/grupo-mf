@@ -1,53 +1,54 @@
 import Image from 'next/image'
-import { ArrowUpRight } from 'lucide-react'
+import { LinkedinIcon } from './brand-icons'
+import styles from './founder-section.module.css'
 
 export function FounderSection() {
   return (
     <section
       id="sobre"
-      className="mf-section mf-about"
+      className={styles.section}
       aria-labelledby="about-title"
     >
-      <div className="mf-container mf-about-grid">
-        <div className="mf-founder-photo">
-          <Image
-            src="/mateus-forest.png"
-            alt="Mateus Forest, fundador do Grupo MF"
-            width={520}
-            height={640}
-            sizes="(max-width: 700px) 90vw, 440px"
-          />
-        </div>
-        <div className="mf-founder-copy">
+      <div className={styles.portrait}>
+        <Image
+          src="/mateus-forest.webp"
+          alt="Mateus Forest, fundador do Grupo MF"
+          fill
+          sizes="(max-width: 1100px) 100vw, 62vw"
+        />
+      </div>
+      <div className={'mf-container ' + styles.layout}>
+        <div className={styles.copy}>
           <p className="mf-eyebrow">03 / Quem está por trás</p>
           <h2 id="about-title">
-            Tecnologia com propósito.
+            Visão de negócio.
             <br />
-            <span>Construída por pessoas.</span>
+            <span>Mentalidade de criação.</span>
           </h2>
-          <p>
-            Acreditamos que as melhores empresas nascem de problemas que merecem
-            ser resolvidos. O Grupo MF reúne essa inquietação com a capacidade
-            de criar.
+          <p className={styles.description}>
+            Minha experiência reúne importação, exportação, gestão de empresas e
+            gestão de equipes. Diferentes perspectivas que se encontram na forma
+            como penso e construo negócios.
           </p>
-          <p>
-            À frente do grupo, Mateus Forest desenvolve produtos que conectam
-            inteligência artificial, automação e experiências simples.
+          <p className={styles.description}>
+            No Grupo MF, conecto essa vivência à tecnologia, à inovação, à
+            criação de produtos e à inteligência artificial para transformar
+            ideias em soluções que fazem sentido na prática.
           </p>
-          <div className="mf-founder-signature">
-            <div>
+          <div className={styles.signature}>
+            <div className={styles.name}>
               <h3>Mateus Forest</h3>
-              <span>Fundador do Grupo MF</span>
+              <a
+                href="https://www.linkedin.com/in/mateus-forest-4664b816a/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Mateus Forest no LinkedIn (abre em nova aba)"
+                title="Mateus Forest no LinkedIn"
+              >
+                <LinkedinIcon width={18} height={18} />
+              </a>
             </div>
-            <a
-              href="https://www.linkedin.com/in/mateus-forest-4664b816a/"
-              target="_blank"
-              rel="noreferrer"
-              className="mf-text-link"
-              aria-label="Conheça Mateus Forest no LinkedIn (abre em nova aba)"
-            >
-              LinkedIn <ArrowUpRight size={17} />
-            </a>
+            <p>Fundador do Grupo MF</p>
           </div>
         </div>
       </div>
