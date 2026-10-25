@@ -1,7 +1,6 @@
-import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
 import { productHref, developmentProducts } from '@/lib/public-products'
-import { products } from './products-data'
+import { ProductExplorer } from './product-explorer'
 import styles from './hero-products.module.css'
 
 export function ProductsSection() {
@@ -22,41 +21,11 @@ export function ProductsSection() {
             </h2>
           </div>
           <p className="mf-section-intro">
-            Software, inteligência artificial e experiências digitais.
-            Diferentes formas de simplificar o que importa.
+            Software, inteligência artificial e experiências digitais. Escolha
+            um produto e descubra uma nova possibilidade.
           </p>
         </div>
-        <div className={'mf-product-grid ' + styles.grid}>
-          {products.map((product, index) => (
-            <a
-              id={'produto-' + product.id}
-              href={productHref(product.id)}
-              key={product.id}
-              className={'mf-product-card ' + styles.card}
-              aria-label={'Conheça o ' + product.name}
-              data-product={product.id}
-            >
-              <div className={styles.art}>
-                <span className={styles.index}>0{index + 1}</span>
-                <Image
-                  src={product.logo}
-                  alt=""
-                  width={200}
-                  height={200}
-                  sizes="200px"
-                />
-              </div>
-              <div className={styles.cardCopy}>
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-              </div>
-              <div className={styles.cardFoot}>
-                <span>{product.category}</span>
-                <ArrowUpRight size={19} strokeWidth={1.4} />
-              </div>
-            </a>
-          ))}
-        </div>
+        <ProductExplorer />
         <div
           className={'mf-development-strip ' + styles.development}
           aria-label="Projetos em desenvolvimento"
