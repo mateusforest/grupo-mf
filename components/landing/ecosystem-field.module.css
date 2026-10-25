@@ -56,9 +56,9 @@
   box-shadow: 0 8px 40px #315be80b;
 }
 .core img {
-  mix-blend-mode: multiply;
   width: 52px;
-  height: 52px;
+  height: auto;
+  object-fit: contain;
 }
 .core span {
   font-size: 7px;
@@ -197,8 +197,7 @@
     height: 76px;
   }
   .core img {
-    width: 36px;
-    height: 36px;
+    width: 42px;
   }
   .caption p {
     font-size: 9px;

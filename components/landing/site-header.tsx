@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { BrandLogo } from '@/components/brand-logo'
 import { useRef, useState } from 'react'
 import { ArrowUpRight, Menu, X } from 'lucide-react'
 
@@ -36,10 +36,7 @@ export function SiteHeader() {
       </a>
       <div className="mf-container mf-header-inner">
         <a href="/" className="mf-brand" aria-label="Grupo MF — início">
-          <Image src="/mf-logo.png" alt="" width={38} height={38} />
-          <span>
-            grupo mf<span className="mf-brand-dot">.</span>
-          </span>
+          <BrandLogo priority />
         </a>
         <nav className="mf-desktop-nav" aria-label="Navegação principal">
           {navLinks.map((link) => (
@@ -76,6 +73,10 @@ export function SiteHeader() {
             <ArrowUpRight size={17} />
           </a>
         ))}
+        <a href="/login" onClick={() => setOpen(false)}>
+          Control Center
+          <ArrowUpRight size={17} />
+        </a>
       </nav>
     </header>
   )

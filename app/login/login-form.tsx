@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { BrandLogo } from '@/components/brand-logo'
 import { useRouter } from 'next/navigation'
 import { type FormEvent, useRef, useState } from 'react'
 import {
@@ -68,10 +68,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
     <div className={'mf-public ' + styles.page}>
       <header className={styles.header}>
         <a href="/" className="mf-brand" aria-label="Grupo MF — início">
-          <Image src="/mf-logo.png" alt="" width={38} height={38} priority />
-          <span>
-            grupo mf<span className="mf-brand-dot">.</span>
-          </span>
+          <BrandLogo priority />
         </a>
         <a href="/" className={styles.back}>
           <ArrowLeft size={15} aria-hidden="true" /> Voltar ao site

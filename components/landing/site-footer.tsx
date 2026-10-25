@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { BrandLogo } from '@/components/brand-logo'
 import { ArrowUpRight } from 'lucide-react'
 import { products } from './products-data'
 import { productHref } from '@/lib/public-products'
@@ -34,11 +34,8 @@ export function SiteFooter() {
       <div className="mf-container">
         <div className="mf-footer-top">
           <div>
-            <a href="/" className="mf-brand">
-              <Image src="/mf-logo.png" alt="" width={38} height={38} />
-              <span>
-                grupo mf<span className="mf-brand-dot">.</span>
-              </span>
+            <a href="/" className="mf-brand" aria-label="Grupo MF — início">
+              <BrandLogo />
             </a>
             <p>
               Boas ideias merecem

@@ -176,7 +176,7 @@ export function EcosystemField() {
         ))}
       </svg>
       <div className={styles.core} aria-hidden="true">
-        <Image src="/mf-logo.png" alt="" width={52} height={52} />
+        <Image src="/brand/grupo-mf-symbol.webp" alt="" width={512} height={288} />
         <span>GRUPO MF</span>
       </div>
       <nav

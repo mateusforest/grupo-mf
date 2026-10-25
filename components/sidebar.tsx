@@ -39,11 +39,11 @@ export function Sidebar() {
       {/* Logo */}
       <div className="flex h-16 items-center gap-2.5 px-4 lg:px-5">
         <Image
-          src="/grupo-mf-logo.png"
+          src="/brand/grupo-mf-symbol.webp"
           alt="Grupo MF"
-          width={32}
-          height={32}
-          className="size-8 shrink-0 object-contain"
+          width={512}
+          height={288}
+          className="size-8 shrink-0 rounded-md bg-white p-0.5 object-contain"
         />
         <span className="hidden text-sm font-semibold tracking-tight text-foreground lg:block">
           Control Center
