@@ -17,10 +17,6 @@ export const metadata: Metadata = {
   description:
     'Criamos tecnologia e abrimos novos caminhos. Conheça os produtos, sistemas inteligentes e iniciativas de inovação do Grupo MF.',
   generator: 'v0.app',
-  icons: {
-    icon: [{ url: '/mf-logo.png', type: 'image/png' }],
-    apple: '/mf-logo.png',
-  },
 }
 
 export const viewport: Viewport = {

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { publicProducts } from '@/lib/public-products'
+import { portfolioProducts } from '@/lib/public-products'
 
 export function LogoTile({ src, alt }: { src: string; alt: string }) {
   return (
@@ -9,7 +9,7 @@ export function LogoTile({ src, alt }: { src: string; alt: string }) {
   )
 }
 
-export const products = publicProducts.map((product) => ({
+export const products = portfolioProducts.map((product) => ({
   ...product,
   icon: <LogoTile src={product.logo} alt={'Logo do ' + product.name} />,
 }))

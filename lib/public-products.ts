@@ -13,19 +13,21 @@ export interface PublicProduct {
   audience: string
   capabilities: ProductCapability[]
   externalUrl?: string
+  inDevelopment?: boolean
 }
 
 export const publicProducts: PublicProduct[] = [
   {
     id: 'cos',
+    inDevelopment: true,
     name: 'COS',
     category: 'Inteligência operacional',
-    logo: '/logos/cos.png',
+    logo: '/logos/cos.webp',
     description:
-      'Sistema Operacional Conversacional que executa, integra e simplifica operações.',
+      'Em desenvolvimento: um sistema operacional conversacional para simplificar operações.',
     headline: 'Menos complexidade. Mais espaço para fazer.',
     introduction:
-      'O COS parte de uma ideia simples: a tecnologia deve facilitar o trabalho. Um sistema operacional conversacional para aproximar pessoas, informações e operações.',
+      'O COS está em desenvolvimento no Grupo MF. Estamos explorando uma abordagem conversacional para aproximar pessoas, informações e operações, com a simplicidade como ponto de partida.',
     audience:
       'Equipes e negócios que buscam uma forma mais simples de lidar com suas operações.',
     capabilities: [
@@ -50,7 +52,7 @@ export const publicProducts: PublicProduct[] = [
     id: 'travelpro',
     name: 'TravelPro',
     category: 'Gestão de turismo',
-    logo: '/logos/travelpro.png',
+    logo: '/logos/travelpro.webp',
     description:
       'Sistema Operacional com IA para agências de viagens e turismo.',
     headline: 'Mais inteligência para quem conecta destinos.',
@@ -79,7 +81,7 @@ export const publicProducts: PublicProduct[] = [
     id: 'travelmatch',
     name: 'TravelMatch',
     category: 'Conexões inteligentes',
-    logo: '/logos/travelmatch.png',
+    logo: '/logos/travelmatch.webp',
     description:
       'Marketplace inteligente que conecta viajantes e agências com precisão.',
     headline: 'A viagem certa começa com uma boa conexão.',
@@ -109,7 +111,7 @@ export const publicProducts: PublicProduct[] = [
     id: 'vuei',
     name: 'VUEI',
     category: 'Experiência de viagem',
-    logo: '/logos/vuei.png',
+    logo: '/logos/vuei.webp',
     description:
       'Toda a viagem em um único link. Organize, compartilhe e viva melhor.',
     headline: 'Sua viagem. Um link. Tudo mais simples.',
@@ -139,7 +141,7 @@ export const publicProducts: PublicProduct[] = [
     id: 'eme',
     name: 'EME',
     category: 'Tecnologia imobiliária',
-    logo: '/logos/eme.png',
+    logo: '/logos/eme.webp',
     description:
       'Sistema Operacional do corretor de imóveis moderno e inteligente.',
     headline: 'Uma nova forma de pensar a operação imobiliária.',
@@ -196,6 +198,9 @@ export const publicProducts: PublicProduct[] = [
     ],
   },
 ]
+
+export const portfolioProducts = publicProducts.filter(product => !product.inDevelopment)
+export const developmentProducts = publicProducts.filter(product => product.inDevelopment)
 
 export const selectProject = {
   id: 'eme-select',

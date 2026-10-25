@@ -1,5 +1,5 @@
 import { ArrowUpRight } from 'lucide-react'
-import { productHref } from '@/lib/public-products'
+import { productHref, developmentProducts } from '@/lib/public-products'
 import { products } from './products-data'
 
 export function ProductsSection() {
@@ -45,6 +45,22 @@ export function ProductsSection() {
                 {product.category}
                 <ArrowUpRight size={16} />
               </span>
+            </a>
+          ))}
+        </div>
+        <div
+          className="mf-development-strip"
+          aria-label="Projetos em desenvolvimento"
+        >
+          <p className="mf-eyebrow">Em desenvolvimento / MF Labs</p>
+          {developmentProducts.map((product) => (
+            <a href={productHref(product.id)} key={product.id}>
+              <span>{product.name}</span>
+              <p>
+                Sistema operacional conversacional. Um novo projeto em
+                construção.
+              </p>
+              <ArrowUpRight size={20} strokeWidth={1.4} />
             </a>
           ))}
         </div>

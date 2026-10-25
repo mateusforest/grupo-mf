@@ -9,6 +9,7 @@ const columns = [
     links: [
       { label: 'Produtos', href: '/#produtos' },
       { label: 'MF Labs', href: '/mf-labs' },
+      { label: 'COS · Em desenvolvimento', href: '/ecossistema/cos' },
       { label: 'O grupo', href: '/#sobre' },
     ],
   },

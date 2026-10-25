@@ -6,7 +6,7 @@ import { ArrowUpRight, Menu, X } from 'lucide-react'
 
 const navLinks = [
   { label: 'Produtos', href: '/#produtos' },
-  { label: 'MF Labs', href: '/#mf-labs' },
+  { label: 'MF Labs', href: '/mf-labs' },
   { label: 'O grupo', href: '/#sobre' },
   { label: 'Investidores', href: '/investidores' },
   { label: 'Carreiras', href: '/carreiras' },
