@@ -73,7 +73,7 @@ export default async function MonitoramentoPage() {
           <>
             <CheckCircle className="size-8 text-success" />
             <div>
-              <p className="font-semibold text-success">Todos os sistemas operacionais</p>
+              <p className="font-semibold text-success">Verificações registradas sem falhas</p>
               <p className="text-sm text-muted-foreground">
                 Última verificação em {formatDate(monitoring.latestCheckAt)}
               </p>
@@ -83,7 +83,7 @@ export default async function MonitoramentoPage() {
           <>
             <AlertTriangle className="size-8 text-warning" />
             <div>
-              <p className="font-semibold text-warning">Alguns sistemas com instabilidade</p>
+              <p className="font-semibold text-warning">Verificações pendentes ou com alertas</p>
               <p className="text-sm text-muted-foreground">
                 Última verificação em {formatDate(monitoring.latestCheckAt)}
               </p>
@@ -160,8 +160,8 @@ export default async function MonitoramentoPage() {
       )}
 
       <div className="rounded-xl border border-border bg-card p-5">
-        <h3 className="font-semibold">Uptime dos Últimos 30 Dias</h3>
-        <p className="text-sm text-muted-foreground">Disponibilidade calculada a partir das verificações reais</p>
+        <h3 className="font-semibold">Dias sem falhas · últimos 30 dias</h3>
+        <p className="text-sm text-muted-foreground">Percentual de dias observados sem falhas. Dias sem registros não contam como disponibilidade.</p>
         {monitoring.products.length > 0 ? (
           <div className="mt-6 space-y-4">
             {monitoring.products.map((product) => (

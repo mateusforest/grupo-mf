@@ -114,6 +114,8 @@ export const INTEGRATED_PROJECTS = [
 ] as const
 
 export const METRIC_LABELS: Record<string, string> = {
+  recognizedRevenueCents: 'Receita bruta reconhecida · acumulada',
+  recognizedRevenueMonthCents: 'Receita bruta reconhecida · mês atual',
   leads: 'Leads cadastrados',
   leads30d: 'Novos leads · 30 dias',
   visits30d: 'Visitas · 30 dias',
@@ -160,7 +162,7 @@ export function parseOperationalReport(
       !Object.hasOwn(METRIC_LABELS, key) ||
       typeof n !== 'number' ||
       !Number.isSafeInteger(n) ||
-      n < 0
+      (n < 0 && !key.startsWith('recognizedRevenue'))
     )
       return null
     metrics[key] = n

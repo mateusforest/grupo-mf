@@ -85,12 +85,10 @@ export function CompanyConsole({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
-      const data = await response
-        .json()
-        .catch(() => ({
-          error:
-            'Sua sessão expirou ou o serviço está indisponível. Atualize a página.',
-        }))
+      const data = await response.json().catch(() => ({
+        error:
+          'Sua sessão expirou ou o serviço está indisponível. Atualize a página.',
+      }))
       if (!response.ok)
         throw new Error(data.error ?? 'Não foi possível concluir.')
       if (body.action === 'create') setPrompt('')
@@ -123,7 +121,7 @@ export function CompanyConsole({
       <div className="mf-company-stats">
         {[
           [
-            'Faturamento informado',
+            'Receita registrada · acumulada',
             brl(finance.revenue),
             `${finance.coverage} de 16 projetos com fonte financeira`,
           ],

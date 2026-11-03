@@ -26,6 +26,30 @@ begin
   into visits, views from public.eme_cases
   where data->>'kind'='site_analytics' and data->>'day' >= to_char((now() at time zone 'America/Sao_Paulo')::date - 29,'YYYY-MM-DD');
   m := jsonb_build_object(
+    'recognizedRevenueCents', (select coalesce(sum(amount),0) from (
+      select (e.value->>'amountCents')::bigint as amount
+      from public.eme_finance_state f cross join lateral jsonb_array_elements(coalesce(f.data->'entries','[]'::jsonb)) e
+      where e.value->>'status' <> 'cancelled' and e.value->>'recognition'='recognized'
+        and e.value->>'competenceDate' <= to_char(now() at time zone 'America/Sao_Paulo','YYYY-MM-DD')
+        and e.value->>'category' in ('sale_fee','rental_fee','management_fee','management_fee_retained','recurring_revenue','other_revenue')
+      union all
+      select (a.value->>'amountCents')::bigint
+      from public.eme_finance_state f cross join lateral jsonb_array_elements(coalesce(f.data->'adjustments','[]'::jsonb)) a
+      where a.value->>'status'='active' and a.value->>'group'='revenue'
+        and a.value->>'competenceDate' <= to_char(now() at time zone 'America/Sao_Paulo','YYYY-MM-DD')
+    ) amounts),
+    'recognizedRevenueMonthCents', (select coalesce(sum(amount),0) from (
+      select (e.value->>'amountCents')::bigint as amount
+      from public.eme_finance_state f cross join lateral jsonb_array_elements(coalesce(f.data->'entries','[]'::jsonb)) e
+      where e.value->>'status' <> 'cancelled' and e.value->>'recognition'='recognized'
+        and e.value->>'competenceDate' between to_char(now() at time zone 'America/Sao_Paulo','YYYY-MM-01') and to_char(now() at time zone 'America/Sao_Paulo','YYYY-MM-DD')
+        and e.value->>'category' in ('sale_fee','rental_fee','management_fee','management_fee_retained','recurring_revenue','other_revenue')
+      union all
+      select (a.value->>'amountCents')::bigint
+      from public.eme_finance_state f cross join lateral jsonb_array_elements(coalesce(f.data->'adjustments','[]'::jsonb)) a
+      where a.value->>'status'='active' and a.value->>'group'='revenue'
+        and a.value->>'competenceDate' between to_char(now() at time zone 'America/Sao_Paulo','YYYY-MM-01') and to_char(now() at time zone 'America/Sao_Paulo','YYYY-MM-DD')
+    ) amounts),
     'leads',(select count(*) from public.eme_leads),
     'leads30d',(select count(*) from public.eme_leads where created_at >= now()-interval '30 days'),
     'visits30d',visits,'pageViews30d',views,

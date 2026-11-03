@@ -61,6 +61,8 @@ assert.equal(
   config.parseOperationalReport({ ...valid, metrics: { customerEmail: 1 } }),
   null,
 )
+assert.equal(config.parseOperationalReport({ ...valid, metrics: { constructor: 1 } }), null)
+assert(config.parseOperationalReport({ ...valid, metrics: { recognizedRevenueCents: -100 } }), 'Revenue adjustments can be negative')
 assert.equal(
   config.parseOperationalReport({ ...valid, metrics: { leads: null } }),
   null,

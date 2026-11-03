@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 const date = (v: string) =>
   new Date(v).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
 export default async function MetricsPage() {
-  if (!await getCompanyOwner()) redirect('/login?redirectTo=/metricas')
+  if (!(await getCompanyOwner())) redirect('/login?redirectTo=/metricas')
   const projects = await getProjectIntegrations()
   return (
     <div className="space-y-6">
@@ -111,11 +111,24 @@ export default async function MetricsPage() {
                           {METRIC_LABELS[k] ?? k}
                         </dt>
                         <dd className="text-xl font-semibold">
-                          {v.toLocaleString('pt-BR')}
+                          {k.endsWith('Cents')
+                            ? (v / 100).toLocaleString('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL',
+                              })
+                            : v.toLocaleString('pt-BR')}
                         </dd>
                       </div>
                     ))}
                   </dl>
+                  {p.report.metrics.recognizedRevenueCents !== undefined && (
+                    <p className="mt-3 text-xs text-muted-foreground">
+                      Receita dos lançamentos reconhecidos e ajustes registrados
+                      até hoje. Exclui previsões, aportes, empréstimos e
+                      recursos de terceiros. Não equivale a saldo em caixa ou
+                      MRR.
+                    </p>
+                  )}
                 </div>
               ) : (
                 <p className="mt-4 text-sm text-muted-foreground">

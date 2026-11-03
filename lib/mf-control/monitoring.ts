@@ -134,21 +134,31 @@ export async function getMonitoringDashboardData(): Promise<MonitoringDashboardD
   }
 
   const supabase = createSupabaseAdminClient()
+  const since = new Date()
+  since.setUTCDate(since.getUTCDate() - 29)
+  since.setUTCHours(0, 0, 0, 0)
+  async function readHealthHistory() {
+    const rows: HealthRow[] = []
+    for (let offset = 0; ; offset += 1000) {
+      const result = await supabase.from('mf_system_health')
+        .select('product_id, service, status, latency_ms, message, checked_at')
+        .gte('checked_at', since.toISOString())
+        .order('checked_at', { ascending: false }).order('id', { ascending: false })
+        .range(offset, offset + 999)
+      if (result.error) throw result.error
+      rows.push(...(result.data ?? []) as HealthRow[])
+      if ((result.data?.length ?? 0) < 1000) return rows
+    }
+  }
 
-  const [productsResult, healthResult] = await Promise.all([
+  const [productsResult, healthRows] = await Promise.all([
     supabase.from('mf_products').select('id, name').order('name'),
-    supabase
-      .from('mf_system_health')
-      .select('product_id, service, status, latency_ms, message, checked_at')
-      .order('checked_at', { ascending: false })
-      .limit(2000),
+    readHealthHistory(),
   ])
 
   if (productsResult.error) throw productsResult.error
-  if (healthResult.error) throw healthResult.error
 
   const products = (productsResult.data ?? []) as ProductRow[]
-  const healthRows = (healthResult.data ?? []) as HealthRow[]
 
   const latestByProductService = new Map<string, HealthRow>()
 

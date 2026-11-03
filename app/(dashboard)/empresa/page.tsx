@@ -13,9 +13,16 @@ export default async function CompanyPage() {
     getProjectIntegrations(),
     getDashboardProducts(),
   ])
-  const selected = products.filter((p) =>
-    INTEGRATED_PROJECTS.some((i) => i.slug === p.slug),
-  )
+  const selected = products
+    .filter((p) => INTEGRATED_PROJECTS.some((i) => i.slug === p.slug))
+    .map((p) => {
+      const reported = projects.find((project) => project.slug === p.slug)
+        ?.report?.metrics.recognizedRevenueCents
+      return {
+        ...p,
+        revenue: p.revenue ?? (reported !== undefined ? reported / 100 : null),
+      }
+    })
   const revenue = selected.filter((p) => p.revenue !== null),
     mrr = selected.filter((p) => p.mrr !== null)
   return (
