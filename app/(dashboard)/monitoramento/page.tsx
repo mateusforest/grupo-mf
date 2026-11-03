@@ -3,6 +3,8 @@ import { CheckCircle, AlertTriangle, XCircle, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { getMonitoringDashboardData } from '@/lib/mf-control/monitoring'
 
+export const dynamic = 'force-dynamic'
+
 const statusConfig = {
   online: { icon: CheckCircle, color: 'text-success', bg: 'bg-success/20', label: 'Online' },
   unstable: { icon: AlertTriangle, color: 'text-warning', bg: 'bg-warning/20', label: 'Instável' },
@@ -11,6 +13,7 @@ const statusConfig = {
 }
 
 const serviceLabels: Record<string, string> = {
+  website: 'Página pública',
   api: 'API',
   database: 'Banco',
   auth: 'Auth',

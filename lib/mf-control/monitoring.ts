@@ -45,7 +45,7 @@ export interface MonitoringDashboardData {
   latestCheckAt: string | null
 }
 
-const DEFAULT_SERVICES = ['api', 'database', 'auth', 'storage', 'stripe', 'openai']
+const DEFAULT_SERVICES = ['website', 'api', 'database', 'auth', 'storage', 'stripe', 'openai']
 
 function normalizeStatus(status: string | null | undefined): ServiceHealthStatus | null {
   if (!status) return null

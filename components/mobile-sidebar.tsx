@@ -14,6 +14,8 @@ import {
   Beaker,
   UsersRound,
   Settings,
+  Building2,
+  BarChart3,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SheetTitle } from '@/components/ui/sheet'
@@ -21,6 +23,8 @@ import { SheetTitle } from '@/components/ui/sheet'
 const navigation = [
   { name: 'Overview', href: '/', icon: LayoutDashboard },
   { name: 'Produtos', href: '/produtos', icon: Package },
+  { name: 'Métricas conectadas', href: '/metricas', icon: BarChart3 },
+  { name: 'Empresa digital', href: '/empresa', icon: Building2 },
   { name: 'Financeiro', href: '/financeiro', icon: DollarSign },
   { name: 'Clientes', href: '/clientes', icon: Users },
   { name: 'IA', href: '/ia', icon: Sparkles },
